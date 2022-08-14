@@ -12,3 +12,16 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.form-modal-link {
+  color: rgba(255, 255, 255, 0.7);
+}
+.form-modal-link:hover {
+  color: #fff;
+}
+.form-modal-link:active {
+  color: #fff;
+}
+.form-modal-link:disabled {
+  color: rgba(255, 255, 255, 0.25);
+}

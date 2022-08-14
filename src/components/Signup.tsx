@@ -57,7 +57,7 @@ const Signup = (props: Props) => {
             label="Phone Number"
             className=""
           >
-            <Form.Control type="tel" placeholder="Phone Number" />
+            <Form.Control type="text" placeholder="Phone Number" />
           </FloatingLabel>
         </Form>
       </Modal.Body>

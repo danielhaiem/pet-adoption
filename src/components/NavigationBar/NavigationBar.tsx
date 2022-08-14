@@ -2,6 +2,8 @@ import React from 'react';
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
 import { AiOutlineHome } from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
+// @ts-ignore
+import { LinkContainer } from 'react-router-bootstrap';
 import FormModal from '../FormModal';
 import './NavigationBar.css';
 
@@ -9,7 +11,7 @@ type Props = {};
 
 const NavigationBar = (props: Props) => {
   return (
-    <Navbar bg="light" expand={false} className="mb-3 navbar">
+    <Navbar bg="primary" variant="dark" expand={false} className="mb-3 navbar">
       <Container fluid>
         <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`} />
         <Navbar.Offcanvas
@@ -26,19 +28,23 @@ const NavigationBar = (props: Props) => {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            <Nav className="justify-content-end flex-grow-1 pe-3">
-              <Nav.Link className="d-flex gap-4">
-                <AiOutlineHome className="align-self-center fs-3" />
-                <span className="fs-4">Home</span>
-              </Nav.Link>
-              <Nav.Link className="d-flex gap-4">
-                <BsSearch className="align-self-center fs-4" />
-                <span className="fs-4">Search</span>
-              </Nav.Link>
+            <Nav className=" justify-content-end flex-grow-1 pe-3">
+              <LinkContainer to="/">
+                <Nav.Link className="link-hover d-flex gap-4">
+                  <AiOutlineHome className="align-self-center fs-3" />
+                  <span className="fs-4">Home</span>
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/search">
+                <Nav.Link className="link-hover d-flex gap-4">
+                  <BsSearch className="align-self-center fs-4" />
+                  <span className="fs-4">Search</span>
+                </Nav.Link>
+              </LinkContainer>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
-        <Nav.Link className="me-4">
+        <Nav.Link className="me-4 ">
           <FormModal />
         </Nav.Link>
       </Container>
