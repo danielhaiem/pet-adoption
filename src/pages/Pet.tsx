@@ -8,6 +8,7 @@ import axios from 'axios';
 type Props = {};
 
 type PetType = {
+  _id: string;
   type: string;
   name: string;
   adoptionStatus: string;
@@ -22,6 +23,7 @@ type PetType = {
 };
 
 const initPetState: PetType = {
+  _id: '',
   type: '',
   name: '',
   adoptionStatus: '',
@@ -42,7 +44,7 @@ const Pet = (props: Props) => {
   useEffect(() => {
     const fetchPet = async () => {
       const { data }: { data: PetType } = await axios.get(
-        `/api/pets/${params.id}`
+        `/api/pet/${params.id}`
       );
       setPet(data);
     };

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import PetCard from '../components/PetCard';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 type Props = {};
 
 type Pet = {
+  _id: string;
   type: string;
   name: string;
   adoptionStatus: string;
@@ -25,7 +26,7 @@ const SearchResults = (props: Props) => {
 
   useEffect(() => {
     const fetchPets = async () => {
-      const { data }: { data: Pet } = await axios.get('/api/pets');
+      const { data }: { data: Pet } = await axios.get('/api/pet');
       setPets(data);
     };
     fetchPets();
@@ -34,7 +35,7 @@ const SearchResults = (props: Props) => {
   return (
     <Row>
       {pets.map((pet) => (
-        <Col key={uuidv4()} sm={12} md={6} lg={4} xl={3}>
+        <Col key={pet._id} sm={12} md={6} lg={4} xl={3}>
           <PetCard pet={pet} />
         </Col>
       ))}
