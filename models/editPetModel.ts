@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-interface IPet {
+interface IEditPet {
   type: string;
   name: string;
   adoptionStatus: string;
@@ -10,21 +10,12 @@ interface IPet {
   color: string;
   bio: string;
   hypoallergnic: boolean;
-  dietery: [];
+  dietery: Array<Object>;
   breed: string;
 }
 
-interface PetForDB extends IPet {
-  user: any;
-}
-
-const petSchema = new Schema<PetForDB>(
+const editPetSchema = new Schema<IEditPet>(
   {
-    user: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'User',
-    },
     type: {
       type: String,
       required: true,
@@ -62,8 +53,7 @@ const petSchema = new Schema<PetForDB>(
       required: true,
     },
     dietery: {
-      any: Array,
-      required: true,
+      type: Array<Object>(),
     },
     breed: {
       type: String,
@@ -75,6 +65,6 @@ const petSchema = new Schema<PetForDB>(
   }
 );
 
-const Pet = model<PetForDB>('Pet', petSchema);
+const EditPet = model<IEditPet>('EditPet', editPetSchema);
 
-export default Pet;
+export default EditPet;

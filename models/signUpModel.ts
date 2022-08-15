@@ -1,15 +1,16 @@
 import { Schema, model, Document } from 'mongoose';
 
-interface IUser {
+interface ISignUp {
   email: string;
   password: string;
   fname: string;
   lname: string;
   tel: string;
+  bio: string;
   isAdmin?: boolean;
 }
 
-const userSchema = new Schema<IUser>(
+const signUpSchema = new Schema<ISignUp>(
   {
     email: {
       type: String,
@@ -19,6 +20,7 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+      minLength: 2,
     },
     fname: {
       type: String,
@@ -32,6 +34,9 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
+    bio: {
+      type: String,
+    },
     isAdmin: {
       type: Boolean,
       required: true,
@@ -43,6 +48,6 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-const User = model<IUser>('User', userSchema);
+const Users = model<ISignUp>('Users', signUpSchema);
 
-export default User;
+export default Users;
