@@ -13,8 +13,8 @@ interface ISignUp {
 const users: ISignUp[] = [
   {
     email: 'admin@test.com',
-    password: bcrypt.hashSync('123456', 10),
-    repassword: bcrypt.hashSync('123456', 10),
+    password: bcrypt.hashSync('Tiles!23', 10),
+    repassword: bcrypt.hashSync('Tiles!23', 10),
     fname: 'Admin',
     lname: 'User',
     tel: '05356781234',
@@ -22,16 +22,16 @@ const users: ISignUp[] = [
   },
   {
     email: 'john@test.com',
-    password: bcrypt.hashSync('123456', 10),
-    repassword: bcrypt.hashSync('123456', 10),
+    password: bcrypt.hashSync('Tiles!23', 10),
+    repassword: bcrypt.hashSync('Tiles!23', 10),
     fname: 'John',
     lname: 'Doe',
     tel: '05312345678',
   },
   {
     email: 'jane@test.com',
-    password: bcrypt.hashSync('123456', 10),
-    repassword: bcrypt.hashSync('123456', 10),
+    password: bcrypt.hashSync('Tiles!23', 10),
+    repassword: bcrypt.hashSync('Tiles!23', 10),
     fname: 'Jane',
     lname: 'Doe',
     tel: '05387654321',

@@ -1,4 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 interface ISignUp {
   email: string;
@@ -8,6 +9,10 @@ interface ISignUp {
   tel: string;
   bio: string;
   isAdmin?: boolean;
+}
+
+interface ISignUpDocument extends ISignUp, Document {
+  matchPassword: (password: string) => Promise<Boolean>;
 }
 
 const signUpSchema = new Schema<ISignUp>(
@@ -48,6 +53,19 @@ const signUpSchema = new Schema<ISignUp>(
   }
 );
 
-const Users = model<ISignUp>('Users', signUpSchema);
+signUpSchema.methods.matchPassword = async function (
+  this: ISignUpDocument,
+  enteredPassword: string
+) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+signUpSchema.pre('save', async function (this: ISignUpDocument, next) {
+  if (!this.isModified('password')) next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+const Users = model<ISignUpDocument>('Users', signUpSchema);
 
 export default Users;
