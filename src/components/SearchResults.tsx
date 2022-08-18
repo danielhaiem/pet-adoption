@@ -4,7 +4,7 @@ import PetCard from '../components/PetCard';
 // import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
-type Props = {};
+type Props = { pets: Pet };
 
 type Pet = {
   _id: string;
@@ -21,16 +21,16 @@ type Pet = {
   breed: string;
 }[];
 
-const SearchResults = (props: Props) => {
-  const [pets, setPets] = useState<Pet>([]);
+const SearchResults = ({ pets }: Props) => {
+  // const [pets, setPets] = useState<Pet>([]);
 
-  useEffect(() => {
-    const fetchPets = async () => {
-      const { data }: { data: Pet } = await axios.get('/api/pet');
-      setPets(data);
-    };
-    fetchPets();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPets = async () => {
+  //     const { data }: { data: Pet } = await axios.get('/api/pet');
+  //     setPets(data);
+  //   };
+  //   fetchPets();
+  // }, []);
 
   return (
     <Row>

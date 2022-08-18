@@ -7,6 +7,7 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Pet from './pages/Pet';
+import SearchResults from './components/SearchResults';
 
 const App = () => {
   return (

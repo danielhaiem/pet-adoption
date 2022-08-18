@@ -102,7 +102,7 @@ const Pet = (props: Props) => {
               Dietary Restrictions:{' '}
               {!pet?.dietery
                 ? 'N/A'
-                : pet?.dietery.length > 1
+                : pet?.dietery.length > 0
                 ? pet?.dietery.join(', ')
                 : 'N/A'}
             </ListGroup.Item>
