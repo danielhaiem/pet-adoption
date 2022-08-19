@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import { Formik, ErrorMessage, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -22,48 +22,79 @@ type Pet = {
   breed: string;
 }[];
 
+const isNumberRegEx = /^\d+$/s;
+
 const validationSchema = Yup.object().shape({
   type: Yup.string(),
+  adoptionStatus: Yup.string(),
+  height: Yup.string().matches(isNumberRegEx, 'Height is not valid'),
+  weight: Yup.string().matches(isNumberRegEx, 'Weight is not valid'),
+  name: Yup.string(),
 });
 
 const SearchForm = ({ setPets }: Props) => {
   let location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [advancedSearch, setAdvancedSearch] = useState(false);
   return (
     <>
       <Formik
         initialValues={{
           type: '',
+          adoptionStatus: '',
+          height: '',
+          weight: '',
+          name: '',
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          console.log(values);
+          // console.log(values);
           setSearchParams(values);
-          console.log('searchparams:', searchParams);
-          console.log('location: ', location);
-          console.log(
-            'specific location:',
-            location.pathname + location.search
-          );
+          // console.log('searchparams:', searchParams);
+          // console.log('location: ', location);
+          // console.log(
+          //   'specific location:',
+          //   location.pathname + location.search
+          // );
+
+          let searchObj = {};
+          if (values.type) Object.assign(searchObj, { type: values.type });
+          if (values.adoptionStatus)
+            Object.assign(searchObj, { adoptionStatus: values.adoptionStatus });
+          if (values.height)
+            Object.assign(searchObj, { height: Number(values.height) });
+          if (values.weight)
+            Object.assign(searchObj, { weight: Number(values.weight) });
+          if (values.name)
+            Object.assign(searchObj, {
+              name:
+                values.name[0].toUpperCase() +
+                values.name.slice(1).toLowerCase(),
+            });
+
+          console.log('searchObj: ', searchObj);
+
           const fetchSearchResults = async () => {
-            if (values.type) {
+            if (
+              values.type ||
+              values.adoptionStatus ||
+              values.height ||
+              values.weight ||
+              values.name
+            ) {
               const { data }: { data: Pet } = await axios.get('/api/pet', {
-                params: values,
+                params: searchObj,
               });
               setPets(data);
             } else {
               const { data }: { data: Pet } = await axios.get('/api/pet');
               setPets(data);
             }
-            // let query = location.search.length > 5 ? location.search : ""
-            // const { data }: { data: Pet } = await axios.get(
-            //   `/api/pet${query}`
-            // );
+
             console.log('values: ', values);
-            // setPets(data);
           };
           fetchSearchResults();
 
@@ -84,9 +115,9 @@ const SearchForm = ({ setPets }: Props) => {
           <Form
             noValidate
             onSubmit={handleSubmit}
-            className="d-flex flex-column gap-2"
+            className="d-flex flex-column gap-1 mb-3"
           >
-            <div className="d-flex gap-2">
+            <div className="d-flex flex-row gap-2">
               <Field as="select" name="type" className="form-select ">
                 <option>Filter by type:</option>
                 <option value="Dog">Dog</option>
@@ -102,9 +133,72 @@ const SearchForm = ({ setPets }: Props) => {
                 className="form-check-input"
                 type="checkbox"
                 id="flexSwitchCheckDefault"
+                onClick={() => setAdvancedSearch(() => !advancedSearch)}
               />
               <label className="form-check-label">Advanced Search</label>
             </div>
+            {advancedSearch && (
+              <Row className="gap-2">
+                <Col sm={12} md={6} lg={4} xl={4}>
+                  <label className="form-label" htmlFor="adoptionStatus">
+                    Adoption Status:
+                  </label>
+                  <Field
+                    as="select"
+                    name="adoptionStatus"
+                    className="form-select "
+                  >
+                    <option>Any:</option>
+                    <option value="Adopted">Adopted</option>
+                    <option value="Fostered">Fostered</option>
+                    <option value="Available">Available</option>
+                  </Field>
+                </Col>
+                <Col sm={12} md={6} lg={4} xl={4}>
+                  <label className="form-label" htmlFor="height">
+                    Height (cm):
+                  </label>
+                  <Field
+                    type="text"
+                    name="height"
+                    className="form-input form-control"
+                    placeholder="Enter number i.e. 5"
+                  />
+                  {errors.height && touched.height ? (
+                    <div className="text-danger mt-1">
+                      Height must be a whole number
+                    </div>
+                  ) : null}
+                </Col>
+                <Col sm={12} md={6} lg={4} xl={4}>
+                  <label className="form-label" htmlFor="weight">
+                    Weight (lbs):
+                  </label>
+                  <Field
+                    type="text"
+                    name="weight"
+                    className="form-input form-control"
+                    placeholder="Enter number i.e. 25"
+                  />
+                  {errors.weight && touched.weight ? (
+                    <div className="text-danger mt-1">
+                      Weight must be a whole number
+                    </div>
+                  ) : null}
+                </Col>
+                <Col sm={12} md={6} lg={4} xl={4}>
+                  <label className="form-label" htmlFor="name">
+                    Name:
+                  </label>
+                  <Field
+                    type="text"
+                    name="name"
+                    className="form-input form-control"
+                    placeholder="Enter pet name i.e. Rajah"
+                  />
+                </Col>
+              </Row>
+            )}
           </Form>
         )}
       </Formik>
