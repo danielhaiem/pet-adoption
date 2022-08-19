@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-interface ISignUp {
+interface IUser {
   email: string;
   password: string;
   fname: string;
@@ -11,11 +11,11 @@ interface ISignUp {
   isAdmin?: boolean;
 }
 
-interface ISignUpDocument extends ISignUp, Document {
+interface IUserDocument extends IUser, Document {
   matchPassword: (password: string) => Promise<Boolean>;
 }
 
-const signUpSchema = new Schema<ISignUp>(
+const userSchema = new Schema<IUser>(
   {
     email: {
       type: String,
@@ -53,19 +53,19 @@ const signUpSchema = new Schema<ISignUp>(
   }
 );
 
-signUpSchema.methods.matchPassword = async function (
-  this: ISignUpDocument,
+userSchema.methods.matchPassword = async function (
+  this: IUserDocument,
   enteredPassword: string
 ) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-signUpSchema.pre('save', async function (this: ISignUpDocument, next) {
+userSchema.pre('save', async function (this: IUserDocument, next) {
   if (!this.isModified('password')) next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-const Users = model<ISignUpDocument>('Users', signUpSchema);
+const Users = model<IUserDocument>('Users', userSchema);
 
 export default Users;

@@ -3,8 +3,8 @@
 import dotenv from 'dotenv';
 import users from './data/UserDataSet';
 import pets from './data/PetsDataSet';
-import Users from './models/signUpModel';
-import Pets from './models/addPetModel';
+import Users from './models/userModel';
+import Pets from './models/petsModel';
 import connectDB from './config/db';
 
 dotenv.config();

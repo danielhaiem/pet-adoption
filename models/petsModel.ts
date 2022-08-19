@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-interface IAddPet {
+interface IPet {
   type: string;
   name: string;
   adoptionStatus: string;
@@ -14,7 +14,7 @@ interface IAddPet {
   breed: string;
 }
 
-const addPetSchema = new Schema<IAddPet>(
+const petSchema = new Schema<IPet>(
   {
     type: {
       type: String,
@@ -64,6 +64,6 @@ const addPetSchema = new Schema<IAddPet>(
   }
 );
 
-const Pets = model<IAddPet>('Pets', addPetSchema);
+const Pets = model<IPet>('Pets', petSchema);
 
 export default Pets;
