@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
-import { Formik, ErrorMessage, Form, Field } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import useStore from '../store';
 
-type Props = { setPets: React.Dispatch<React.SetStateAction<Pet>> };
+type Props = {};
 
 type Pet = {
   _id: string;
@@ -32,9 +32,8 @@ const validationSchema = Yup.object().shape({
   name: Yup.string(),
 });
 
-const SearchForm = ({ setPets }: Props) => {
-  let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+const SearchForm = (props: Props) => {
+  const store = useStore();
   const [advancedSearch, setAdvancedSearch] = useState(false);
   return (
     <>
@@ -51,14 +50,6 @@ const SearchForm = ({ setPets }: Props) => {
         validateOnBlur={false}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          // console.log(values);
-          setSearchParams(values);
-          // console.log('searchparams:', searchParams);
-          // console.log('location: ', location);
-          // console.log(
-          //   'specific location:',
-          //   location.pathname + location.search
-          // );
 
           let searchObj = {};
           if (values.type) Object.assign(searchObj, { type: values.type });
@@ -75,8 +66,6 @@ const SearchForm = ({ setPets }: Props) => {
                 values.name.slice(1).toLowerCase(),
             });
 
-          console.log('searchObj: ', searchObj);
-
           const fetchSearchResults = async () => {
             if (
               values.type ||
@@ -88,10 +77,10 @@ const SearchForm = ({ setPets }: Props) => {
               const { data }: { data: Pet } = await axios.get('/api/pet', {
                 params: searchObj,
               });
-              setPets(data);
+              store.setPets(data);
             } else {
               const { data }: { data: Pet } = await axios.get('/api/pet');
-              setPets(data);
+              store.setPets(data);
             }
 
             console.log('values: ', values);
