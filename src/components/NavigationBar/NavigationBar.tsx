@@ -1,8 +1,7 @@
 import React from 'react';
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
-import { AiOutlineHome } from 'react-icons/ai';
+import { AiOutlineHome, AiOutlineSetting } from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
-// @ts-ignore
 import { LinkContainer } from 'react-router-bootstrap';
 import FormModal from '../FormModal';
 import './NavigationBar.css';
@@ -39,6 +38,13 @@ const NavigationBar = (props: Props) => {
                 <Nav.Link className="link-hover d-flex gap-4">
                   <BsSearch className="align-self-center fs-4" />
                   <span className="fs-4">Search</span>
+                </Nav.Link>
+              </LinkContainer>
+
+              <LinkContainer to="/profile">
+                <Nav.Link className="link-hover d-flex gap-4">
+                  <AiOutlineSetting className="align-self-center fs-4" />
+                  <span className="fs-4">Profile</span>
                 </Nav.Link>
               </LinkContainer>
             </Nav>

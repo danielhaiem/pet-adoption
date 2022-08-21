@@ -1,87 +1,92 @@
 import React from 'react';
-import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
+import { Form, Button, FloatingLabel, Container } from 'react-bootstrap';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
-
-type Props = {
-  handleClose: () => void;
-};
+type Props = {};
 
 interface ISignUp {
   email: string;
   password: string;
-  repassword: string;
   fname: string;
   lname: string;
   tel: string;
+  bio: string;
 }
 
-// RegEx for phone number validation
 const phoneRegExp =
   /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 const passwordRegExp =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-// Schema for yup
+
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('*Must be a valid email address')
-    .max(50, '*Email must be less than 50 characters')
-    .required('*Email is required'),
+    .max(50, '*Email must be less than 50 characters'),
   password: Yup.string()
     .min(6, 'Password should be of minimum 6 characters length')
     .matches(
       passwordRegExp,
       'Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character'
-    )
-    .required('Password is required'),
-  repassword: Yup.string()
-    .min(6, 'Password should be of minimum 6 characters length')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Password is required'),
+    ),
   fname: Yup.string()
     .min(2, '*Names must have at least 2 characters')
-    .max(15, "*Names can't be longer than 15 characters")
-    .required('*Name is required'),
+    .max(15, "*Names can't be longer than 15 characters"),
   lname: Yup.string()
     .min(2, '*Names must have at least 2 characters')
-    .max(20, "*Names can't be longer than 20 characters")
-    .required('*Name is required'),
-  tel: Yup.string()
-    .matches(phoneRegExp, '*Phone number is not valid')
-    .required('*Phone number required'),
+    .max(20, "*Names can't be longer than 20 characters"),
+
+  tel: Yup.string().matches(phoneRegExp, '*Phone number is not valid'),
+  bio: Yup.string().max(140, 'Bio can be max 140 characters'),
 });
 
-const Signup = (props: Props) => {
-  //Use React Query to save to synchronize information
+// const schema = yup.object({
+//   phone: yup.string().when('$exist', {
+//       is: exist => exist,
+//       then: yup.string().required(),
+//       otherwise: yup.string()
+//   })
+// })
+
+const Profile = (props: Props) => {
   return (
     <>
       <Formik
         initialValues={{
           email: '',
           password: '',
-          repassword: '',
           fname: '',
           lname: '',
           tel: '',
+          bio: '',
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
 
-          console.log(values);
+          let userObj = {};
+          if (values.email) Object.assign(userObj, { email: values.email });
+          if (values.password)
+            Object.assign(userObj, { password: values.password });
+          if (values.fname)
+            Object.assign(userObj, {
+              fname:
+                values.fname[0].toUpperCase() +
+                values.fname.slice(1).toLowerCase(),
+            });
+          if (values.lname)
+            Object.assign(userObj, {
+              lname:
+                values.lname[0].toUpperCase() +
+                values.lname.slice(1).toLowerCase(),
+            });
+          if (values.tel) Object.assign(userObj, { tel: values.tel });
+          if (values.bio) Object.assign(userObj, { bio: values.bio });
 
-          const postSignup = async () => {
-            const res = await axios.post('/signup', values);
-            console.log(res.data);
-          };
-          postSignup();
-          // Simulate submitting to database, shows us values submitted, resets form
+          console.log(userObj);
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+            alert(JSON.stringify(userObj, null, 2));
             resetForm();
             setSubmitting(false);
           }, 500);
@@ -98,10 +103,8 @@ const Signup = (props: Props) => {
           isValid,
         }) => (
           <Form noValidate onSubmit={handleSubmit}>
-            <Modal.Header>
-              <Modal.Title>Signup</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+            <Container>
+              <h1 className="mb-3">Profile Settings</h1>
               <FloatingLabel
                 controlId="formEmail"
                 label="Email address"
@@ -132,29 +135,14 @@ const Signup = (props: Props) => {
                   value={values.password}
                   onChange={handleChange}
                   placeholder="Password"
+                  isValid={touched.password && !errors.password}
                   isInvalid={!!errors.password}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
                 </Form.Control.Feedback>
               </FloatingLabel>
-              <FloatingLabel
-                controlId="formConfirmPassword"
-                label="Confirm Password"
-                className="mb-3"
-              >
-                <Form.Control
-                  type="password"
-                  name="repassword"
-                  value={values.repassword}
-                  onChange={handleChange}
-                  placeholder="Confirm Password"
-                  isInvalid={!!errors.repassword}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.repassword}
-                </Form.Control.Feedback>
-              </FloatingLabel>
+
               <FloatingLabel
                 controlId="formFirstName"
                 label="First Name"
@@ -191,7 +179,11 @@ const Signup = (props: Props) => {
                   {errors.lname}
                 </Form.Control.Feedback>
               </FloatingLabel>
-              <FloatingLabel controlId="formPhoneNumber" label="Phone Number">
+              <FloatingLabel
+                controlId="formPhoneNumber"
+                label="Phone Number"
+                className="mb-3"
+              >
                 <Form.Control
                   type="text"
                   name="tel"
@@ -205,15 +197,41 @@ const Signup = (props: Props) => {
                   {errors.tel}
                 </Form.Control.Feedback>
               </FloatingLabel>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={props.handleClose}>
-                CANCEL
-              </Button>
-              <Button variant="primary" type="submit">
-                SIGNUP
-              </Button>
-            </Modal.Footer>
+
+              <FloatingLabel controlId="formBio" label="Bio" className="mb-3">
+                <Form.Control
+                  type="text"
+                  as="textarea"
+                  name="bio"
+                  value={values.bio}
+                  onChange={handleChange}
+                  placeholder="Enter bio..."
+                  isValid={touched.bio && !errors.bio}
+                  isInvalid={!!errors.bio}
+                  style={{ height: '100px' }}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.bio}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+              <div className="d-flex">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="ms-auto"
+                  disabled={
+                    !values.email &&
+                    !values.password &&
+                    !values.fname &&
+                    !values.lname &&
+                    !values.tel &&
+                    !values.bio
+                  }
+                >
+                  SAVE
+                </Button>
+              </div>
+            </Container>
           </Form>
         )}
       </Formik>
@@ -221,4 +239,4 @@ const Signup = (props: Props) => {
   );
 };
 
-export default Signup;
+export default Profile;

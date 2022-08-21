@@ -7,7 +7,7 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Pet from './pages/Pet';
-import SearchResults from './components/SearchResults';
+import Profile from './pages/Profile';
 
 const App = () => {
   return (
@@ -21,6 +21,7 @@ const App = () => {
                 <Route index element={<Home />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/pet/:id" element={<Pet />} />
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </Container>
           </main>

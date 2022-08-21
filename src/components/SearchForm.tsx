@@ -4,6 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import useStore from '../store';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 type Props = {};
 
@@ -27,14 +28,16 @@ const isNumberRegEx = /^\d+$/s;
 const validationSchema = Yup.object().shape({
   type: Yup.string(),
   adoptionStatus: Yup.string(),
-  height: Yup.string().matches(isNumberRegEx, 'Height is not valid'),
-  weight: Yup.string().matches(isNumberRegEx, 'Weight is not valid'),
+  height: Yup.string().matches(isNumberRegEx, 'Height must be a whole number'),
+  weight: Yup.string().matches(isNumberRegEx, 'Weight must be a whole number'),
   name: Yup.string(),
 });
 
 const SearchForm = (props: Props) => {
   const store = useStore();
   const [advancedSearch, setAdvancedSearch] = useState(false);
+  let location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <>
       <Formik
@@ -82,11 +85,9 @@ const SearchForm = (props: Props) => {
               const { data }: { data: Pet } = await axios.get('/api/pet');
               store.setPets(data);
             }
-
-            console.log('values: ', values);
           };
           fetchSearchResults();
-
+          setSearchParams(searchObj);
           resetForm();
           setSubmitting(false);
         }}
@@ -154,9 +155,7 @@ const SearchForm = (props: Props) => {
                     placeholder="Enter number i.e. 5"
                   />
                   {errors.height && touched.height ? (
-                    <div className="text-danger mt-1">
-                      Height must be a whole number
-                    </div>
+                    <div className="text-danger mt-1">{errors.height}</div>
                   ) : null}
                 </Col>
                 <Col sm={12} md={6} lg={4} xl={4}>
@@ -170,9 +169,7 @@ const SearchForm = (props: Props) => {
                     placeholder="Enter number i.e. 25"
                   />
                   {errors.weight && touched.weight ? (
-                    <div className="text-danger mt-1">
-                      Weight must be a whole number
-                    </div>
+                    <div className="text-danger mt-1">{errors.weight}</div>
                   ) : null}
                 </Col>
                 <Col sm={12} md={6} lg={4} xl={4}>
