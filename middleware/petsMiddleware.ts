@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 const isQueryValid = (req: Request, res: Response, next: NextFunction) => {
+  // console.log(req.query);
   if (req.query.type === '') {
     res.status(400).send('Type query empty');
     return;
@@ -11,6 +12,7 @@ const isQueryValid = (req: Request, res: Response, next: NextFunction) => {
   }
 
   if (req.query.height === '') {
+    // typeof req.query.height !== 'number' && req.query.height
     res.status(400).send('Height query empty');
     return;
   }

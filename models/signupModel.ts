@@ -1,21 +1,16 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-interface IUser {
+interface ISignup {
   email: string;
   password: string;
   fname: string;
   lname: string;
   tel: string;
-  bio: string;
   isAdmin?: boolean;
 }
 
-interface IUserDocument extends IUser, Document {
-  matchPassword: (password: string) => Promise<Boolean>;
-}
-
-const userSchema = new Schema<IUser>(
+const signupSchema = new Schema<ISignup>(
   {
     email: {
       type: String,
@@ -39,9 +34,6 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
-    bio: {
-      type: String,
-    },
     isAdmin: {
       type: Boolean,
       required: true,
@@ -53,6 +45,6 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-const Users = model<IUserDocument>('Users', userSchema);
+const Signup = model<ISignup>('Users', signupSchema);
 
-export default Users;
+export { Signup };

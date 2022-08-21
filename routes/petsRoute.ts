@@ -4,7 +4,7 @@ import { isQueryValid } from '../middleware/petsMiddleware';
 
 const router = Router();
 
-// @desc    Fetch all pets
+// @desc    Fetch pets based on search
 // @route   GET /api/pets
 // @access  Public
 router.get('/', isQueryValid, getSearchResults);

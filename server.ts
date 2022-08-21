@@ -5,6 +5,7 @@ import connectDB from './config/db';
 // import pets from './data/PetsDataSet';
 import cors from 'cors';
 import petsRoute from './routes/petsRoute';
+import signupRoute from './routes/signupRoute';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 
 // Below doesn't work!!!
@@ -25,6 +26,7 @@ app.get('/', (req: Request, res: Response): void => {
 });
 
 app.use('/api/pet', petsRoute);
+app.use('/signup', signupRoute);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -3,6 +3,9 @@ import Pets from '../models/petsModel';
 
 const getSearchResults = async (req: Request, res: Response): Promise<void> => {
   // either use middleware in be to see if query is filled or empty. If empty then change object in middleware. OR in fe change object to filter to categories that aren't empty
+
+  // const { name, type, height } = req.query;
+  // const pets = await Pets.find({ name: {$regex: `/${name}/`}, height: {$lte: height}, we });
   try {
     const pets = await Pets.find(req.query);
     res.json(pets);
