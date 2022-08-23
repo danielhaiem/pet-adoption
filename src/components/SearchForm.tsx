@@ -54,7 +54,8 @@ const SearchForm = (props: Props) => {
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
 
-          let searchObj = {};
+          const searchObj = {};
+          // Object.keys(values).forEach((val)=> searchObj[val] = values[val]);
           if (values.type) Object.assign(searchObj, { type: values.type });
           if (values.adoptionStatus)
             Object.assign(searchObj, { adoptionStatus: values.adoptionStatus });

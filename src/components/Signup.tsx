@@ -68,23 +68,17 @@ const Signup = (props: Props) => {
         validationSchema={validationSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
           // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
 
           console.log(values);
 
-          const postSignup = async () => {
-            const res = await axios.post('/signup', values);
-            console.log(res.data);
-          };
-          postSignup();
-          // Simulate submitting to database, shows us values submitted, resets form
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            resetForm();
-            setSubmitting(false);
-          }, 500);
+          const res = await axios.post('/signup', values);
+          console.log(res.data);
+
+          resetForm();
+          setSubmitting(false);
         }}
       >
         {({

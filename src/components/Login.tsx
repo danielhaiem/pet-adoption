@@ -3,6 +3,7 @@ import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   handleClose: () => void;
@@ -24,6 +25,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = (props: Props) => {
+  let navigate = useNavigate();
   return (
     <>
       <Formik
@@ -37,26 +39,19 @@ const Login = (props: Props) => {
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
-          console.log(values);
 
-          //DOESN'T WORK NOW. WAIT FOR SUNDAY
-          // const { data } = await axios.post<ILogin>(
-          //   'http://localhost:5000/login',
-          //   values,
-          //   {
-          //     headers: {
-          //       'content-type': 'application/json',
-          //     },
-          //   }
-          // );
-          // console.log('data post request', data);
+          const res = await axios.post('/login', values, {
+            withCredentials: true,
+          });
+          console.log('res.data: ', res.data);
+          console.log('res.data.token: ', res.data.token);
+          if (res.data.token) {
+            // setToken(res.data.token);
+            navigate('/');
+          }
 
-          // Simulate submitting to database, shows us values submitted, resets form
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            resetForm();
-            setSubmitting(false);
-          }, 500);
+          resetForm();
+          setSubmitting(false);
         }}
       >
         {({

@@ -10,7 +10,13 @@ type Props = {};
 
 const NavigationBar = (props: Props) => {
   return (
-    <Navbar bg="primary" variant="dark" expand={false} className="mb-3 navbar">
+    <Navbar
+      collapseOnSelect
+      bg="primary"
+      variant="dark"
+      expand={false}
+      className="mb-3 navbar"
+    >
       <Container fluid>
         <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`} />
         <Navbar.Offcanvas
