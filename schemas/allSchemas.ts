@@ -10,6 +10,12 @@ interface ISignup {
   isAdmin?: boolean;
 }
 
+interface ILogin {
+  email: string;
+  password: string;
+  isAdmin?: boolean;
+}
+
 const signUpSchema: JSONSchemaType<ISignup> = {
   type: 'object',
   properties: {
@@ -25,4 +31,15 @@ const signUpSchema: JSONSchemaType<ISignup> = {
   required: ['email', 'password', 'repassword', 'fname', 'lname', 'tel'],
 };
 
-export { signUpSchema };
+const loginSchema: JSONSchemaType<ILogin> = {
+  type: 'object',
+  properties: {
+    email: { type: 'string', maxLength: 50 },
+    password: { type: 'string', minLength: 6 },
+    isAdmin: { type: 'boolean', nullable: true },
+  },
+  additionalProperties: false,
+  required: ['email', 'password'],
+};
+
+export { signUpSchema, loginSchema };

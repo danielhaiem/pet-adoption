@@ -20,7 +20,7 @@ const signUpUser = async (req: Request, res: Response) => {
   try {
     const { email, password, fname, lname, tel }: ISignup = req.body;
     const newUser = { email, password, fname, lname, tel };
-    const userId = await Signup.insertMany(newUser);
+    const userId = await Signup.create(newUser);
     res.send({ userId: userId, email });
   } catch (error) {
     console.log(error);

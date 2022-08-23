@@ -4,10 +4,14 @@ const ajv = new Ajv();
 
 const validateBody = (schema: Object) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const valid = ajv.validate(schema, req.body);
-    if (!valid) {
-      res.status(400).send('Incorrect Body');
-      return;
+    try {
+      const valid = ajv.validate(schema, req.body);
+      if (!valid) {
+        res.status(400).send('Incorrect Body');
+        return;
+      }
+    } catch (error) {
+      console.error(error);
     }
     next();
   };
