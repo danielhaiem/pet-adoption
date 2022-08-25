@@ -3,25 +3,11 @@ import { Button, Row, Col } from 'react-bootstrap';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { userAuthStore, useStore } from '../store';
+import { useStore } from '../store';
 import { useLocation, useSearchParams } from 'react-router-dom';
+import type { Pet } from '../types/types';
 
 type Props = {};
-
-type Pet = {
-  _id: string;
-  type: string;
-  name: string;
-  adoptionStatus: string;
-  picture: string;
-  height: number;
-  weight: number;
-  color: string;
-  bio: string;
-  hypoallergnic: boolean;
-  dietery: [];
-  breed: string;
-}[];
 
 const isNumberRegEx = /^\d+$/s;
 

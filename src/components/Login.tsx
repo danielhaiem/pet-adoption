@@ -1,30 +1,16 @@
 import React from 'react';
 import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { userAuthStore } from '../store';
+import type { UserAuth } from '../types/types';
 
 type Props = {
   handleClose: () => void;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
-interface ILogin {
-  email: string;
-  password: string;
-}
-
-type UserAuth = {
-  id: string;
-  email: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  isAdmin?: boolean;
-  bio?: string;
-  ok: boolean;
-}[];
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -39,6 +25,7 @@ const validationSchema = Yup.object().shape({
 const Login = (props: Props) => {
   let navigate = useNavigate();
   const userStore = userAuthStore();
+  const setCookieExists = userAuthStore((state) => state.setCookieExists);
 
   return (
     <>
@@ -61,14 +48,20 @@ const Login = (props: Props) => {
             }
           );
 
-          console.log('data: ', data);
           if (data) {
+            const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+              withCredentials: true,
+            });
             userStore.setToken(data);
-            console.log('Login', userStore.token);
+            let cookie = document.cookie;
+            if (cookie) {
+              setCookieExists(true);
+            }
           }
 
           resetForm();
           setSubmitting(false);
+          props.setShow(false);
         }}
       >
         {({

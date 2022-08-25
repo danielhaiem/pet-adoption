@@ -4,23 +4,9 @@ import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import { BiArrowBack } from 'react-icons/bi';
 import { MdFavoriteBorder } from 'react-icons/md';
 import axios from 'axios';
+import type { PetType } from '../types/types';
 
 type Props = {};
-
-type PetType = {
-  _id: string;
-  type: string;
-  name: string;
-  adoptionStatus: string;
-  picture: string;
-  height: number;
-  weight: number;
-  color: string;
-  bio: string;
-  hypoallergnic: boolean;
-  dietery: never[];
-  breed: string;
-};
 
 const initPetState: PetType = {
   _id: '',

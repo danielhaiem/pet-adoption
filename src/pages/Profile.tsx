@@ -2,16 +2,8 @@ import React from 'react';
 import { Form, Button, FloatingLabel, Container } from 'react-bootstrap';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import type { ISignUp } from '../types/types';
 type Props = {};
-
-interface ISignUp {
-  email: string;
-  password: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  bio: string;
-}
 
 const phoneRegExp =
   /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
@@ -38,14 +30,6 @@ const validationSchema = Yup.object().shape({
   tel: Yup.string().matches(phoneRegExp, '*Phone number is not valid'),
   bio: Yup.string().max(140, 'Bio can be max 140 characters'),
 });
-
-// const schema = yup.object({
-//   phone: yup.string().when('$exist', {
-//       is: exist => exist,
-//       then: yup.string().required(),
-//       otherwise: yup.string()
-//   })
-// })
 
 const Profile = (props: Props) => {
   console.log('Profile Page Rerender');
@@ -119,7 +103,6 @@ const Profile = (props: Props) => {
                   placeholder="name@example.com"
                   isValid={touched.email && !errors.email}
                   isInvalid={!!errors.email}
-                  // onBlur={handleBlur}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}

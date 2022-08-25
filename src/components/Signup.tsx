@@ -1,28 +1,20 @@
-import React from 'react';
 import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import type { UserAuth } from '../types/types';
+import { userAuthStore } from '../store';
 
 type Props = {
   handleClose: () => void;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-interface ISignUp {
-  email: string;
-  password: string;
-  repassword: string;
-  fname: string;
-  lname: string;
-  tel: string;
-}
-
-// RegEx for phone number validation
 const phoneRegExp =
   /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 const passwordRegExp =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-// Schema for yup
+
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('*Must be a valid email address')
@@ -53,6 +45,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const Signup = (props: Props) => {
+  const userStore = userAuthStore();
+  const setCookieExists = userAuthStore((state) => state.setCookieExists);
   //Use React Query to save to synchronize information
   return (
     <>
@@ -72,13 +66,22 @@ const Signup = (props: Props) => {
           // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
 
-          console.log(values);
-
           const res = await axios.post('/signup', values);
           console.log(res.data);
+          if (res.data) {
+            const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+              withCredentials: true,
+            });
+            userStore.setToken(data);
+            let cookie = document.cookie;
+            if (cookie) {
+              setCookieExists(true);
+            }
+          }
 
           resetForm();
           setSubmitting(false);
+          props.setShow(false);
         }}
       >
         {({

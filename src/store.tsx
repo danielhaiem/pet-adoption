@@ -1,36 +1,11 @@
 import create from 'zustand';
 import { useEffect } from 'react';
-
-type Pet = {
-  _id: string;
-  type: string;
-  name: string;
-  adoptionStatus: string;
-  picture: string;
-  height: number;
-  weight: number;
-  color: string;
-  bio: string;
-  hypoallergnic: boolean;
-  dietery: [];
-  breed: string;
-}[];
+import type { UserAuth, Pet } from './types/types';
 
 type Store = {
   pets: Pet;
   setPets: (pets: Pet) => void;
 };
-
-type UserAuth = {
-  id: string;
-  email: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  isAdmin?: boolean;
-  bio?: string;
-  ok: boolean;
-}[];
 
 type TokenStore = {
   token: UserAuth;
@@ -45,7 +20,7 @@ const useStore = create<Store>((set) => ({
 }));
 
 const userAuthStore = create<TokenStore>((set) => ({
-  token: [],
+  token: {},
   setToken: (token: UserAuth) => set((state) => ({ ...state, token })),
   cookieExists: false,
   setCookieExists: (input: boolean) =>

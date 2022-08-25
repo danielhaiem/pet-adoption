@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Tab, Tabs } from 'react-bootstrap';
 import Login from './Login';
 import Signup from './Signup';
@@ -29,10 +29,10 @@ const FormModal = (props: Props) => {
             justify
           >
             <Tab eventKey="signup" title="SIGNUP">
-              <Signup handleClose={handleClose} />
+              <Signup handleClose={handleClose} setShow={setShow} />
             </Tab>
             <Tab eventKey="login" title="LOGIN">
-              <Login handleClose={handleClose} />
+              <Login handleClose={handleClose} setShow={setShow} />
             </Tab>
           </Tabs>
         </Modal>

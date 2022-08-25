@@ -8,19 +8,9 @@ import { userAuthStore } from '../../store';
 import FormModal from '../FormModal';
 import ProfileDropdown from '../ProfileDropdown';
 import './NavigationBar.css';
+import type { UserAuth } from '../../types/types';
 
 type Props = {};
-
-type UserAuth = {
-  id: string;
-  email: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  isAdmin?: boolean;
-  bio?: string;
-  ok: boolean;
-}[];
 
 const NavigationBar = (props: Props) => {
   const userStore = userAuthStore();
@@ -42,7 +32,7 @@ const NavigationBar = (props: Props) => {
     if (cookie) {
       setCookieExists(true);
     }
-    console.log(cookieExists);
+    // console.log(cookieExists);
     if (cookie && Object.keys(userStore.token).length === 0) {
       fetchUser();
     }
