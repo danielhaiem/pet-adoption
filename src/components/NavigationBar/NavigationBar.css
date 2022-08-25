@@ -5,3 +5,7 @@
 .link-hover:hover {
   color: black;
 }
+
+#dropdown-basic::after {
+  display: none;
+}

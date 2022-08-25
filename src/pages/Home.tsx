@@ -3,6 +3,7 @@ import React from 'react';
 type Props = {};
 
 const Home = (props: Props) => {
+  console.log('Home Page Rerender');
   return (
     <div>
       <h1>Welcome to Woof Meow Adoption</h1>

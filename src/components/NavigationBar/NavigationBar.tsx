@@ -1,14 +1,53 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
 import { AiOutlineHome, AiOutlineSetting } from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
 import { LinkContainer } from 'react-router-bootstrap';
+import { userAuthStore } from '../../store';
 import FormModal from '../FormModal';
+import ProfileDropdown from '../ProfileDropdown';
 import './NavigationBar.css';
 
 type Props = {};
 
+type UserAuth = {
+  id: string;
+  email: string;
+  fname: string;
+  lname: string;
+  tel: string;
+  isAdmin?: boolean;
+  bio?: string;
+  ok: boolean;
+}[];
+
 const NavigationBar = (props: Props) => {
+  const userStore = userAuthStore();
+  const setCookieExists = userAuthStore((state) => state.setCookieExists);
+  const cookieExists = userAuthStore((state) => state.cookieExists);
+
+  let cookie = document.cookie;
+
+  // console.log('cookie', cookie);
+  // console.log('userStore.token', userStore.token);
+  const fetchUser = async () => {
+    const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+      withCredentials: true,
+    });
+    userStore.setToken(data);
+    // console.log('profiledropdown data:', data);
+  };
+  useEffect(() => {
+    if (cookie) {
+      setCookieExists(true);
+    }
+    console.log(cookieExists);
+    if (cookie && Object.keys(userStore.token).length === 0) {
+      fetchUser();
+    }
+  }, []);
+
   return (
     <Navbar
       collapseOnSelect
@@ -56,9 +95,12 @@ const NavigationBar = (props: Props) => {
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
-        <Nav.Link className="me-4 ">
-          <FormModal />
-        </Nav.Link>
+        {!cookieExists && (
+          <Nav.Link className="me-4 ">
+            <FormModal />
+          </Nav.Link>
+        )}
+        {cookieExists && <ProfileDropdown />}
       </Container>
     </Navbar>
   );

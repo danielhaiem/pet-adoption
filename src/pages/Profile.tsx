@@ -48,6 +48,7 @@ const validationSchema = Yup.object().shape({
 // })
 
 const Profile = (props: Props) => {
+  console.log('Profile Page Rerender');
   return (
     <>
       <Formik

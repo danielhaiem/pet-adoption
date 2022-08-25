@@ -4,6 +4,7 @@ import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { userAuthStore } from '../store';
 
 type Props = {
   handleClose: () => void;
@@ -13,6 +14,17 @@ interface ILogin {
   email: string;
   password: string;
 }
+
+type UserAuth = {
+  id: string;
+  email: string;
+  fname: string;
+  lname: string;
+  tel: string;
+  isAdmin?: boolean;
+  bio?: string;
+  ok: boolean;
+}[];
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -26,6 +38,8 @@ const validationSchema = Yup.object().shape({
 
 const Login = (props: Props) => {
   let navigate = useNavigate();
+  const userStore = userAuthStore();
+
   return (
     <>
       <Formik
@@ -37,17 +51,20 @@ const Login = (props: Props) => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
 
-          const res = await axios.post('/login', values, {
-            withCredentials: true,
-          });
-          console.log('res.data: ', res.data);
-          console.log('res.data.token: ', res.data.token);
-          if (res.data.token) {
-            // setToken(res.data.token);
-            navigate('/');
+          const { data }: { data: UserAuth } = await axios.post(
+            '/login',
+            values,
+            {
+              withCredentials: true,
+            }
+          );
+
+          console.log('data: ', data);
+          if (data) {
+            userStore.setToken(data);
+            console.log('Login', userStore.token);
           }
 
           resetForm();

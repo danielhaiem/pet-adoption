@@ -38,6 +38,7 @@ const initPetState: PetType = {
 };
 
 const Pet = (props: Props) => {
+  console.log('Pet Page Rerender');
   const params = useParams();
   const [pet, setPet] = useState<PetType>(initPetState);
 

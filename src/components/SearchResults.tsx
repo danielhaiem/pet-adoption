@@ -1,6 +1,6 @@
 import { Row, Col } from 'react-bootstrap';
 import PetCard from '../components/PetCard';
-import useStore from '../store';
+import { useStore } from '../store';
 
 type Props = {};
 

@@ -3,7 +3,7 @@ import { Button, Row, Col } from 'react-bootstrap';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import useStore from '../store';
+import { userAuthStore, useStore } from '../store';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
 type Props = {};
