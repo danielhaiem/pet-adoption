@@ -7,6 +7,7 @@ import cors from 'cors';
 import petsRoute from './routes/petsRoute';
 import signupRoute from './routes/signupRoute';
 import loginRoute from './routes/loginRoute';
+import signoutRoute from './routes/signoutRoute';
 import userRoute from './routes/userRoute';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 import cookieParser from 'cookie-parser';
@@ -31,6 +32,7 @@ app.get('/', (req: Request, res: Response): void => {
 app.use('/api/pet', petsRoute);
 app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
+app.use('/signout', signoutRoute);
 app.use('/user', userRoute);
 
 app.use(notFound);

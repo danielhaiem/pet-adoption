@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { Signup } from '../models/signupModel';
+import { User } from '../models/userModel';
 
 const passwordsMatch = (req: Request, res: Response, next: NextFunction) => {
   if (req.body.password !== req.body.repassword) {
@@ -11,7 +11,7 @@ const passwordsMatch = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const isNewUser = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await Signup.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email });
   if (user) {
     res.status(400).send('User already exists');
     return;

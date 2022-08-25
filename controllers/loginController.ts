@@ -29,13 +29,6 @@ const login = (req: Request, res: Response) => {
     res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000 });
 
     res.send({
-      id: _id,
-      email: email,
-      fname: fname,
-      lname: lname,
-      tel: tel,
-      isAdmin: isAdmin,
-      bio: bio || '',
       ok: true,
     });
   } catch (error) {
