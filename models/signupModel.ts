@@ -1,5 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { Schema, model } from 'mongoose';
 
 interface ISignup {
   email: string;

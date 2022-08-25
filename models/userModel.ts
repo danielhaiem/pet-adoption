@@ -1,5 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { Schema, model, models, Document } from 'mongoose';
 
 interface IUser {
   email: string;
@@ -53,6 +52,6 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-const Users = model<IUserDocument>('Users', userSchema);
+const User = models['Users'] || model<IUserDocument>('Users', userSchema);
 
-export default Users;
+export { User };

@@ -1,28 +1,53 @@
 import { Request, Response } from 'express';
-import Users from '../models/userModel';
+import { User } from '../models/userModel';
 
-const authUser = async (req: Request, res: Response) => {
+interface IUser {
+  _id: string;
+  email: string;
+  fname: string;
+  lname: string;
+  tel: string;
+  isAdmin?: boolean;
+  bio?: string;
+  ok: boolean;
+}
+
+// TODO: destructure and return all elements except for the password
+const getUsers = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body as { email: string; password: string };
-    const user = await Users.findOne({ email });
+    // const { token } = req.cookies;
+    const user = await User.findById(req.body.userId);
 
-    if (user && (await user.matchPassword(password))) {
+    console.log(user);
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getUser = async (req: Request, res: Response) => {
+  try {
+    // const { token } = req.cookies;
+    const user = await User.findById(req.body.userId);
+    if (user) {
+      const { _id, email, fname, lname, tel, isAdmin, bio }: IUser = user;
       res.json({
-        _id: user._id,
-        email: user.email,
-        fname: user.fname,
-        lname: user.lname,
-        tel: user.tel,
-        bio: user.bio,
-        admin: user.isAdmin,
+        id: _id,
+        email: email,
+        fname: fname,
+        lname: lname,
+        tel: tel,
+        isAdmin: isAdmin,
+        bio: bio || '',
+        ok: true,
       });
     } else {
-      res.status(401);
-      throw new Error('Invalid email or password');
+      res.status(404).json({ message: 'User not found' });
+      throw new Error('User not found');
     }
   } catch (error) {
     console.error(error);
   }
 };
 
-export default authUser;
+export { getUsers, getUser };
