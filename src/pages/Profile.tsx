@@ -1,8 +1,10 @@
-import React from 'react';
 import { Form, Button, FloatingLabel, Container } from 'react-bootstrap';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import type { ISignUp } from '../types/types';
+import type { UserAuth } from '../types/types';
+import { userAuthStore } from '../store';
+import axios from 'axios';
+
 type Props = {};
 
 const phoneRegExp =
@@ -20,61 +22,72 @@ const validationSchema = Yup.object().shape({
       passwordRegExp,
       'Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character'
     ),
+  repassword: Yup.string()
+    .min(6, 'Password should be of minimum 6 characters length')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
   fname: Yup.string()
     .min(2, '*Names must have at least 2 characters')
     .max(15, "*Names can't be longer than 15 characters"),
   lname: Yup.string()
     .min(2, '*Names must have at least 2 characters')
     .max(20, "*Names can't be longer than 20 characters"),
-
   tel: Yup.string().matches(phoneRegExp, '*Phone number is not valid'),
   bio: Yup.string().max(140, 'Bio can be max 140 characters'),
 });
 
 const Profile = (props: Props) => {
   console.log('Profile Page Rerender');
+  const { token, setToken } = userAuthStore();
+
   return (
     <>
       <Formik
+        enableReinitialize
         initialValues={{
-          email: '',
+          email: token.email || '',
           password: '',
-          fname: '',
-          lname: '',
-          tel: '',
-          bio: '',
+          repassword: '',
+          fname: token.fname || '',
+          lname: token.lname || '',
+          tel: token.tel || '',
+          bio: token.bio || '',
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
 
           let userObj = {};
-          if (values.email) Object.assign(userObj, { email: values.email });
-          if (values.password)
+          if (values.email && values.email !== token.email)
+            Object.assign(userObj, { email: values.email });
+          if (values.password && values.repassword) {
             Object.assign(userObj, { password: values.password });
-          if (values.fname)
+            Object.assign(userObj, { repassword: values.repassword });
+          }
+          if (values.fname && values.fname !== token.fname)
             Object.assign(userObj, {
-              fname:
-                values.fname[0].toUpperCase() +
-                values.fname.slice(1).toLowerCase(),
+              fname: values.fname,
             });
-          if (values.lname)
+          if (values.lname && values.lname !== token.lname)
             Object.assign(userObj, {
-              lname:
-                values.lname[0].toUpperCase() +
-                values.lname.slice(1).toLowerCase(),
+              lname: values.lname,
             });
-          if (values.tel) Object.assign(userObj, { tel: values.tel });
-          if (values.bio) Object.assign(userObj, { bio: values.bio });
+          if (values.tel && values.tel !== token.tel)
+            Object.assign(userObj, { tel: values.tel });
+          if (values.bio && values.bio !== token.bio)
+            Object.assign(userObj, { bio: values.bio });
 
-          console.log(userObj);
-          setTimeout(() => {
-            alert(JSON.stringify(userObj, null, 2));
-            resetForm();
-            setSubmitting(false);
-          }, 500);
+          const res = await axios.put('/user/:id', userObj);
+          if (res.data) {
+            const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+              withCredentials: true,
+            });
+            setToken(data);
+          }
+
+          resetForm();
+          setSubmitting(false);
         }}
       >
         {({
@@ -119,11 +132,28 @@ const Profile = (props: Props) => {
                   value={values.password}
                   onChange={handleChange}
                   placeholder="Password"
-                  isValid={touched.password && !errors.password}
                   isInvalid={!!errors.password}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+
+              <FloatingLabel
+                controlId="formConfirmPassword"
+                label="Confirm Password"
+                className="mb-3"
+              >
+                <Form.Control
+                  type="password"
+                  name="repassword"
+                  value={values.repassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                  isInvalid={!!errors.repassword}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.repassword}
                 </Form.Control.Feedback>
               </FloatingLabel>
 
@@ -206,6 +236,7 @@ const Profile = (props: Props) => {
                   disabled={
                     !values.email &&
                     !values.password &&
+                    !values.repassword &&
                     !values.fname &&
                     !values.lname &&
                     !values.tel &&

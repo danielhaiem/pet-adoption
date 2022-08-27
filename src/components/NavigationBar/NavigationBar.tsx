@@ -28,7 +28,9 @@ const NavigationBar = (props: Props) => {
     userStore.setToken(data);
     // console.log('profiledropdown data:', data);
   };
+
   useEffect(() => {
+    console.log('navigation bar useEffect render');
     if (cookie) {
       setCookieExists(true);
     }
