@@ -21,14 +21,16 @@ const isNewUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const hashPwd = (req: Request, res: Response, next: NextFunction) => {
   const saltRounds = 10;
-  bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-    if (err) {
-      res.status(500).send(err.message);
-      return;
-    }
-    req.body.password = hash;
-    next();
-  });
+  if (req.body.password) {
+    bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+      if (err) {
+        res.status(500).send(err.message);
+        return;
+      }
+      req.body.password = hash;
+    });
+  }
+  next();
 };
 
 export { passwordsMatch, isNewUser, hashPwd };

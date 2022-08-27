@@ -14,8 +14,8 @@ router.post(
   '/',
   validateBody(signUpSchema),
   passwordsMatch,
-  isNewUser,
   hashPwd,
+  isNewUser,
   signUpUser
 );
 
