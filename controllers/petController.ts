@@ -1,4 +1,4 @@
-import express, { Router, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import Pets from '../models/petsModel';
 
 const getSearchResults = async (req: Request, res: Response): Promise<void> => {

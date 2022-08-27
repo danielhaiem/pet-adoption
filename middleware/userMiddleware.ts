@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt, { VerifyErrors } from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.cookies;

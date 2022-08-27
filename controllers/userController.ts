@@ -1,21 +1,9 @@
 import { Request, Response } from 'express';
 import { User } from '../models/userModel';
+import type { IUser } from '../types/types';
 
-interface IUser {
-  _id: string;
-  email: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  isAdmin?: boolean;
-  bio?: string;
-  ok: boolean;
-}
-
-// TODO: destructure and return all elements except for the password
 const getUsers = async (req: Request, res: Response) => {
   try {
-    // const { token } = req.cookies;
     const user = await User.findById(req.body.userId);
 
     console.log(user);
@@ -27,7 +15,6 @@ const getUsers = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    // const { token } = req.cookies;
     const user = await User.findById(req.body.userId);
     if (user) {
       const { _id, email, fname, lname, tel, isAdmin, bio }: IUser = user;

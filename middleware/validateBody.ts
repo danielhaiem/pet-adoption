@@ -1,4 +1,4 @@
-import Ajv, { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 import { NextFunction, Request, Response } from 'express';
 const ajv = new Ajv();
 

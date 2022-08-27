@@ -2,21 +2,10 @@ import dotenv from 'dotenv';
 import { User } from '../models/userModel';
 import { Request, Response } from 'express';
 import connectDB from '../config/db';
-import jwt from 'jsonwebtoken';
+import type { ISignup } from '../types/types';
 
 dotenv.config();
 connectDB();
-
-interface ISignup {
-  email: string;
-  password: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  bio: string;
-  isAdmin?: boolean;
-  userId: string;
-}
 
 const updateUserInfo = async (req: Request, res: Response) => {
   try {

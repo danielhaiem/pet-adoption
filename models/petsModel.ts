@@ -1,18 +1,5 @@
-import { Schema, model, Types } from 'mongoose';
-
-interface IPet {
-  type: string;
-  name: string;
-  adoptionStatus: string;
-  picture: string;
-  height: number;
-  weight: number;
-  color: string;
-  bio: string;
-  hypoallergnic: boolean;
-  dietery: Array<Object>;
-  breed: string;
-}
+import { Schema, model } from 'mongoose';
+import type { IPet } from '../types/types';
 
 const petSchema = new Schema<IPet>(
   {

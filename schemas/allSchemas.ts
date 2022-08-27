@@ -1,33 +1,7 @@
 import { JSONSchemaType } from 'ajv';
+import type { ILogin, IProfile, ISignupSchema } from '../types/types';
 
-interface ISignup {
-  email: string;
-  password: string;
-  repassword: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  isAdmin?: boolean;
-}
-
-interface ILogin {
-  email: string;
-  password: string;
-  isAdmin?: boolean;
-}
-
-interface IProfile {
-  email: string;
-  password: string;
-  repassword: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  bio: string;
-  isAdmin?: boolean;
-}
-
-const signUpSchema: JSONSchemaType<ISignup> = {
+const signUpSchema: JSONSchemaType<ISignupSchema> = {
   type: 'object',
   properties: {
     email: { type: 'string', maxLength: 50 },

@@ -1,24 +1,13 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import type { IUser } from '../types/types';
 
 dotenv.config();
 
-interface IUser {
-  _id: string;
-  email: string;
-  fname: string;
-  lname: string;
-  tel: string;
-  isAdmin?: boolean;
-  bio?: string;
-  ok: boolean;
-}
-
 const login = (req: Request, res: Response) => {
   try {
-    const { _id, email, fname, lname, tel, isAdmin, bio }: IUser =
-      req.body.user;
+    const { _id, isAdmin }: IUser = req.body.user;
     const token = jwt.sign(
       { id: _id, isAdmin: isAdmin },
       process.env.TOKEN_SECRET as string,
