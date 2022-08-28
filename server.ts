@@ -22,7 +22,7 @@ app.get('/', (req: Request, res: Response): void => {
   res.send('API is running...');
 });
 
-app.use('/api/pet', petsRoute);
+app.use('/pet', petsRoute);
 app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
 app.use('/signout', signoutRoute);

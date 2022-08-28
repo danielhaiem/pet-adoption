@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { User } from '../models/userModel';
-import { Request, Response } from 'express';
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import connectDB from '../config/db';
 import jwt from 'jsonwebtoken';
 import type { ISignup } from '../types/types';
@@ -8,7 +8,7 @@ import type { ISignup } from '../types/types';
 dotenv.config();
 connectDB();
 
-const signUpUser = async (req: Request, res: Response) => {
+const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password, fname, lname, tel }: ISignup = req.body;
     const newUser = { email, password, fname, lname, tel };
@@ -24,8 +24,10 @@ const signUpUser = async (req: Request, res: Response) => {
     res.send({
       ok: userId.true,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    error.statusCode = 500;
+    next(error);
   }
 };
 

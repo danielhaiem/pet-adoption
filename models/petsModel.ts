@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 import type { IPet } from '../types/types';
 
 const petSchema = new Schema<IPet>(
@@ -51,6 +51,6 @@ const petSchema = new Schema<IPet>(
   }
 );
 
-const Pets = model<IPet>('Pets', petSchema);
+const Pets = models['Pets'] || model<IPet>('Pets', petSchema);
 
 export default Pets;

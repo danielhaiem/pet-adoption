@@ -17,7 +17,8 @@ const getUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.body.userId);
     if (user) {
-      const { _id, email, fname, lname, tel, isAdmin, bio }: IUser = user;
+      const { _id, email, fname, lname, tel, isAdmin, bio, savedPets }: IUser =
+        user;
       res.json({
         id: _id,
         email: email,
@@ -26,6 +27,7 @@ const getUser = async (req: Request, res: Response) => {
         tel: tel,
         isAdmin: isAdmin,
         bio: bio || '',
+        savedPets: savedPets || [],
         ok: true,
       });
     } else {

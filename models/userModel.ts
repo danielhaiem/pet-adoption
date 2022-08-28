@@ -7,6 +7,7 @@ interface IUser {
   lname: string;
   tel: string;
   bio: string;
+  savedPets: Array<Object>;
   isAdmin?: boolean;
 }
 
@@ -40,6 +41,9 @@ const userSchema = new Schema<IUser>(
     },
     bio: {
       type: String,
+    },
+    savedPets: {
+      type: Array<Object>(),
     },
     isAdmin: {
       type: Boolean,

@@ -7,6 +7,7 @@ interface IUser {
   isAdmin?: boolean;
   bio?: string;
   ok: boolean;
+  savedPets?: Array<Object>;
 }
 
 interface ISignup {
