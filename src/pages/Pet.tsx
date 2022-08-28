@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
+import { Row, Col, Image, ListGroup, Button } from 'react-bootstrap';
 import { BiArrowBack } from 'react-icons/bi';
 import { MdFavoriteBorder } from 'react-icons/md';
 import axios from 'axios';
-import type { PetType } from '../types/types';
+import type { PetType, UserAuth } from '../types/types';
+import { modalSignUpInStore, userAuthStore } from '../store';
 
 type Props = {};
 
@@ -25,18 +26,51 @@ const initPetState: PetType = {
 
 const Pet = (props: Props) => {
   console.log('Pet Page Rerender');
+  const userStore = userAuthStore();
+  const cookieExists = userAuthStore((state) => state.cookieExists);
+
+  const setShow = modalSignUpInStore((state) => state.setShow);
+  const handleShow = () => setShow(true);
+
   const params = useParams();
   const [pet, setPet] = useState<PetType>(initPetState);
+  const [fetchUserBool, setFetchUserBool] = useState(false);
 
   useEffect(() => {
     const fetchPet = async () => {
-      const { data }: { data: PetType } = await axios.get(
-        `/api/pet/${params.id}`
-      );
+      const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
       setPet(data);
     };
     fetchPet();
   }, [params]);
+
+  const fetchUser = async () => {
+    const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+      withCredentials: true,
+    });
+    userStore.setToken(data);
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUserBool]);
+
+  const handleSavePet = async () => {
+    if (cookieExists) {
+      if (userStore.token.savedPets?.includes(params.id)) {
+        const res = await axios.delete(`/pet/${params.id}/save`, {
+          withCredentials: true,
+        });
+        if (res.data) setFetchUserBool((prev) => !prev);
+      } else {
+        const res = await axios.post(`/pet/${params.id}/save`, {
+          withCredentials: true,
+        });
+        if (res.data) setFetchUserBool((prev) => !prev);
+      }
+    }
+  };
+
   return (
     <>
       <Link to="/search">
@@ -51,16 +85,18 @@ const Pet = (props: Props) => {
                 : 'http://placekitten.com/640/510'
             }
             alt={pet?.name}
+            className="pt-2 "
             fluid
           />
         </Col>
-        <Col md={3}>
+        <Col md={6}>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h1>{pet?.name}</h1>
             </ListGroup.Item>
-            <ListGroup.Item>
-              Type: {pet?.type ? pet?.type : 'N/A'}
+            <ListGroup.Item className="d-flex gap-4">
+              <span>Type: {pet?.type ? pet?.type : 'N/A'}</span>
+              <span>Breed: {pet?.breed ? pet?.breed : 'N/A'}</span>
             </ListGroup.Item>
             <ListGroup.Item>
               Adoption Status:{' '}
@@ -70,9 +106,6 @@ const Pet = (props: Props) => {
               <span>Height: {pet?.height ? pet?.height : 'N/A'}cm</span>
               <span>Weight: {pet?.weight ? pet?.weight : 'N/A'}lbs</span>
             </ListGroup.Item>
-            {/* <ListGroup.Item>
-              Weight: {pet?.weight ? pet?.weight : 'N/A'}lbs
-            </ListGroup.Item> */}
             <ListGroup.Item>
               Color: {pet?.color ? pet?.color : 'N/A'}
             </ListGroup.Item>
@@ -93,53 +126,31 @@ const Pet = (props: Props) => {
                 ? pet?.dietery.join(', ')
                 : 'N/A'}
             </ListGroup.Item>
-            <ListGroup.Item>
-              Breed: {pet?.breed ? pet?.breed : 'N/A'}
-            </ListGroup.Item>
           </ListGroup>
-        </Col>
-        <Col md={3}>
-          <Card>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <Row>
-                  <Col>Name:</Col>
-                  <Col>
-                    <strong>{pet?.name}</strong>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            </ListGroup>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <Row>
-                  <Col>Adoption Status:</Col>
-                  <Col>
-                    <strong>{pet?.adoptionStatus}</strong>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            </ListGroup>
-            <div className="d-grid gap-1 p-2">
-              {/* TODO: Hide/Show buttons depending on user status */}
-              <Button variant="warning" size="lg">
-                Return {pet?.name}
-              </Button>
-
-              <Button variant="info" size="lg">
-                Adopt {pet?.name}
-              </Button>
-
-              <Button variant="info" size="lg">
-                Foster {pet?.name}
-              </Button>
-
-              <Button variant="secondary" size="lg">
-                <MdFavoriteBorder className="me-3" stroke="white" size={27} />
-                FAVORITE
-              </Button>
-            </div>
-          </Card>
+          <div className="d-flex gap-1 p-2">
+            <Button variant="primary" size="lg" className="flex-fill">
+              Adopt
+            </Button>
+            <Button variant="primary" size="lg" className="flex-fill">
+              Foster
+            </Button>
+            <Button variant="primary" size="lg" className="flex-fill">
+              Return
+            </Button>
+          </div>
+          <div className="d-flex p-2">
+            <Button
+              variant="secondary"
+              size="lg"
+              className="flex-fill"
+              onClick={cookieExists ? handleSavePet : handleShow}
+            >
+              <MdFavoriteBorder className="me-3" stroke="white" size={27} />
+              {userStore.token.savedPets?.includes(params.id)
+                ? 'UNFAVORITE'
+                : 'FAVORITE'}
+            </Button>
+          </div>
         </Col>
       </Row>
     </>

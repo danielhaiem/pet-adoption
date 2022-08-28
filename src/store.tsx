@@ -1,5 +1,4 @@
 import create from 'zustand';
-import { useEffect } from 'react';
 import type { UserAuth, Pet } from './types/types';
 
 type Store = {
@@ -12,6 +11,11 @@ type TokenStore = {
   setToken: (token: UserAuth) => void;
   cookieExists: boolean;
   setCookieExists: (input: boolean) => void;
+};
+
+type ModalStore = {
+  show: boolean;
+  setShow: (input: boolean) => void;
 };
 
 const useStore = create<Store>((set) => ({
@@ -27,4 +31,9 @@ const userAuthStore = create<TokenStore>((set) => ({
     set((state) => ({ cookieExists: input })),
 }));
 
-export { useStore, userAuthStore };
+const modalSignUpInStore = create<ModalStore>((set) => ({
+  show: false,
+  setShow: (input: boolean) => set((state) => ({ show: input })),
+}));
+
+export { useStore, userAuthStore, modalSignUpInStore };

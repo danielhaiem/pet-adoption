@@ -64,12 +64,12 @@ const SearchForm = (props: Props) => {
               values.weight ||
               values.name
             ) {
-              const { data }: { data: Pet } = await axios.get('/api/pet', {
+              const { data }: { data: Pet } = await axios.get('/pet', {
                 params: searchObj,
               });
               store.setPets(data);
             } else {
-              const { data }: { data: Pet } = await axios.get('/api/pet');
+              const { data }: { data: Pet } = await axios.get('/pet');
               store.setPets(data);
             }
           };

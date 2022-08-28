@@ -3,11 +3,10 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import type { UserAuth } from '../types/types';
-import { userAuthStore } from '../store';
+import { modalSignUpInStore, userAuthStore } from '../store';
 
 type Props = {
   handleClose: () => void;
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const phoneRegExp =
@@ -47,6 +46,7 @@ const validationSchema = Yup.object().shape({
 const Signup = (props: Props) => {
   const userStore = userAuthStore();
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
+  const setShow = modalSignUpInStore((state) => state.setShow);
   //Use React Query to save to synchronize information
   return (
     <>
@@ -81,7 +81,7 @@ const Signup = (props: Props) => {
 
           resetForm();
           setSubmitting(false);
-          props.setShow(false);
+          setShow(false);
         }}
       >
         {({

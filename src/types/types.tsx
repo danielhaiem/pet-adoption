@@ -6,6 +6,7 @@ type UserAuth = {
   tel?: string;
   isAdmin?: boolean;
   bio?: string;
+  savedPets?: (string | undefined)[];
   ok?: boolean;
 };
 
