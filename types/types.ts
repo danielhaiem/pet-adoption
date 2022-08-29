@@ -8,6 +8,8 @@ interface IUser {
   bio?: string;
   ok: boolean;
   savedPets?: Array<Object>;
+  fosteredPets: Array<Object>;
+  adoptedPets: Array<Object>;
 }
 
 interface ISignup {

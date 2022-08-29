@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { User } from '../models/userModel';
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import connectDB from '../config/db';
 import jwt from 'jsonwebtoken';
 import type { ISignup } from '../types/types';

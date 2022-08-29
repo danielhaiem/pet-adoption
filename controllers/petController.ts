@@ -94,4 +94,95 @@ const deleteSavedPet = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getSearchResults, getPetById, addSavedPet, deleteSavedPet };
+const adoptOrFosterPet = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId }: ISignup = req.body;
+    const { id } = req.params;
+    const pet = await Pets.findById(req.params.id);
+
+    if (req.body.adoptionStatus === 'Fostered') {
+      if (pet.adoptionStatus === 'Available') {
+        const userFosterPet = await User.findOneAndUpdate(
+          { _id: userId },
+          { $push: { fosteredPets: id } }
+        ).exec();
+        const updatePetAdoptionStatus = await Pets.findOneAndUpdate(
+          { _id: id },
+          { $set: { adoptionStatus: 'Fostered' } }
+        ).exec();
+        res.send({
+          ok: true,
+        });
+      } else {
+        res.status(404).json({ message: 'Pet not available' });
+        throw new Error('Pet not available');
+      }
+    } else {
+      if (pet.adoptionStatus !== 'Adopted') {
+        const userFosterPet = await User.findOneAndUpdate(
+          { _id: userId },
+          { $push: { adoptedPets: id }, $pull: { fosteredPets: id } }
+        ).exec();
+        const updatePetAdoptionStatus = await Pets.findOneAndUpdate(
+          { _id: id },
+          { $set: { adoptionStatus: 'Adopted' } }
+        ).exec();
+        res.send({
+          ok: true,
+        });
+      } else {
+        res.status(404).json({ message: 'Pet not available' });
+        throw new Error('Pet not available');
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const returnPet = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId }: ISignup = req.body;
+    const { id } = req.params;
+    const pet = await Pets.findById(req.params.id);
+    if (pet.adoptionStatus === 'Fostered') {
+      const userReturnFosteredPet = await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { fosteredPets: id } }
+      ).exec();
+      const updatePetFosteredAdoptionStatus = await Pets.findOneAndUpdate(
+        { _id: id },
+        { $set: { adoptionStatus: 'Available' } }
+      ).exec();
+      res.send({
+        ok: true,
+      });
+    } else if (pet.adoptionStatus === 'Adopted') {
+      const userReturnAdoptedPet = await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { adoptedPets: id } }
+      ).exec();
+      const updatePetAdoptedAdoptionStatus = await Pets.findOneAndUpdate(
+        { _id: id },
+        { $set: { adoptionStatus: 'Available' } }
+      ).exec();
+      res.send({
+        ok: true,
+      });
+    } else {
+      res.status(404).json({ message: 'Pet not available to return' });
+      throw new Error('Pet not available to return');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export {
+  getSearchResults,
+  getPetById,
+  addSavedPet,
+  deleteSavedPet,
+  adoptOrFosterPet,
+  returnPet,
+};

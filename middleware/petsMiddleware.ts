@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import Pets from '../models/petsModel';
 
 const isQueryValid = (req: Request, res: Response, next: NextFunction) => {
   // console.log(req.query);
@@ -30,4 +31,30 @@ const isQueryValid = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export { isQueryValid };
+const isPetAdopted = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const pet = await Pets.findById(req.params.id);
+  if (pet.adoptionStatus === 'Adopted') {
+    res.status(400).send('Pet already adopted');
+    return;
+  }
+  next();
+};
+
+const isPetAvailable = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const pet = await Pets.findById(req.params.id);
+  if (pet.adoptionStatus === 'Available') {
+    res.status(400).send('Pet is available and can not be returned');
+    return;
+  }
+  next();
+};
+
+export { isQueryValid, isPetAdopted, isPetAvailable };

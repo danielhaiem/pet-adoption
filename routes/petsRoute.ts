@@ -4,8 +4,14 @@ import {
   getPetById,
   addSavedPet,
   deleteSavedPet,
+  adoptOrFosterPet,
+  returnPet,
 } from '../controllers/petController';
-import { isQueryValid } from '../middleware/petsMiddleware';
+import {
+  isPetAdopted,
+  isPetAvailable,
+  isQueryValid,
+} from '../middleware/petsMiddleware';
 import { verifyToken } from '../middleware/userMiddleware';
 
 const router = Router();
@@ -16,5 +22,8 @@ router.get('/:id', getPetById);
 
 router.post('/:id/save', verifyToken, addSavedPet);
 router.delete('/:id/save', verifyToken, deleteSavedPet);
+
+router.post('/:id/adopt', verifyToken, isPetAdopted, adoptOrFosterPet);
+router.post('/:id/return', verifyToken, isPetAvailable, returnPet);
 
 export default router;

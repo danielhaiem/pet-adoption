@@ -8,6 +8,8 @@ interface IUser {
   tel: string;
   bio: string;
   savedPets: Array<Object>;
+  fosteredPets: Array<Object>;
+  adoptedPets: Array<Object>;
   isAdmin?: boolean;
 }
 
@@ -43,6 +45,12 @@ const userSchema = new Schema<IUser>(
       type: String,
     },
     savedPets: {
+      type: Array<Object>(),
+    },
+    fosteredPets: {
+      type: Array<Object>(),
+    },
+    adoptedPets: {
       type: Array<Object>(),
     },
     isAdmin: {
