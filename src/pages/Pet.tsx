@@ -35,14 +35,12 @@ const Pet = (props: Props) => {
   const params = useParams();
   const [pet, setPet] = useState<PetType>(initPetState);
   const [fetchUserBool, setFetchUserBool] = useState(false);
+  const [fetchPetBool, setFetchPetBool] = useState(false);
 
-  useEffect(() => {
-    const fetchPet = async () => {
-      const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
-      setPet(data);
-    };
-    fetchPet();
-  }, [params]);
+  const fetchPet = async () => {
+    const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
+    setPet(data);
+  };
 
   const fetchUser = async () => {
     const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
@@ -50,6 +48,10 @@ const Pet = (props: Props) => {
     });
     userStore.setToken(data);
   };
+
+  useEffect(() => {
+    fetchPet();
+  }, [params, fetchPetBool]);
 
   useEffect(() => {
     fetchUser();
@@ -66,7 +68,65 @@ const Pet = (props: Props) => {
         const res = await axios.post(`/pet/${params.id}/save`, {
           withCredentials: true,
         });
-        if (res.data) setFetchUserBool((prev) => !prev);
+        if (res.data) {
+          setFetchPetBool((prev) => !prev);
+          setFetchUserBool((prev) => !prev);
+        }
+      }
+    }
+  };
+
+  const handleFosterPet = async () => {
+    if (cookieExists) {
+      if (!userStore.token.fosteredPets?.includes(params.id)) {
+        const res = await axios.post(
+          `/pet/${params.id}/adopt`,
+          { adoptionStatus: 'Fostered' },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.data) {
+          setFetchPetBool((prev) => !prev);
+          setFetchUserBool((prev) => !prev);
+        }
+      }
+    }
+  };
+
+  const handleAdoptPet = async () => {
+    if (cookieExists) {
+      if (!userStore.token.adoptedPets?.includes(params.id)) {
+        const res = await axios.post(
+          `/pet/${params.id}/adopt`,
+          { adoptionStatus: 'Adopted' },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.data) {
+          setFetchPetBool((prev) => !prev);
+          setFetchUserBool((prev) => !prev);
+        }
+      }
+    }
+  };
+
+  const returnPet = async () => {
+    if (cookieExists) {
+      if (
+        userStore.token.adoptedPets?.includes(params.id) ||
+        userStore.token.fosteredPets?.includes(params.id)
+      ) {
+        const res = await axios.post(`/pet/${params.id}/return`, {
+          withCredentials: true,
+        });
+        if (res.data) {
+          setFetchPetBool((prev) => !prev);
+          setFetchUserBool((prev) => !prev);
+        }
+      } else {
+        console.log("return pet didn't work");
       }
     }
   };
@@ -128,15 +188,37 @@ const Pet = (props: Props) => {
             </ListGroup.Item>
           </ListGroup>
           <div className="d-flex gap-1 p-2">
-            <Button variant="primary" size="lg" className="flex-fill">
-              Adopt
-            </Button>
-            <Button variant="primary" size="lg" className="flex-fill">
-              Foster
-            </Button>
-            <Button variant="primary" size="lg" className="flex-fill">
-              Return
-            </Button>
+            {pet?.adoptionStatus !== 'Adopted' && (
+              <Button
+                variant="primary"
+                size="lg"
+                className="flex-fill"
+                onClick={cookieExists ? handleAdoptPet : handleShow}
+              >
+                Adopt
+              </Button>
+            )}
+            {pet?.adoptionStatus === 'Available' && (
+              <Button
+                variant="primary"
+                size="lg"
+                className="flex-fill"
+                onClick={cookieExists ? handleFosterPet : handleShow}
+              >
+                Foster
+              </Button>
+            )}
+            {(userStore.token.adoptedPets?.includes(params.id) ||
+              userStore.token.fosteredPets?.includes(params.id)) && (
+              <Button
+                variant="primary"
+                size="lg"
+                className="flex-fill"
+                onClick={cookieExists ? returnPet : handleShow}
+              >
+                Return
+              </Button>
+            )}
           </div>
           <div className="d-flex p-2">
             <Button

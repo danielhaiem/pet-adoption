@@ -7,6 +7,9 @@ type UserAuth = {
   isAdmin?: boolean;
   bio?: string;
   savedPets?: (string | undefined)[];
+  fosteredPets?: (string | undefined)[];
+  adoptedPets?: (string | undefined)[];
+
   ok?: boolean;
 };
 
