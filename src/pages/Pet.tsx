@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Button } from 'react-bootstrap';
 import { BiArrowBack } from 'react-icons/bi';
 import { MdFavoriteBorder } from 'react-icons/md';
@@ -24,8 +24,9 @@ const initPetState: PetType = {
   breed: '',
 };
 
-const Pet = (props: Props) => {
+const PetPage = (props: Props) => {
   console.log('Pet Page Rerender');
+  const navigate = useNavigate();
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
 
@@ -43,10 +44,12 @@ const Pet = (props: Props) => {
   };
 
   const fetchUser = async () => {
-    const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
-      withCredentials: true,
-    });
-    userStore.setToken(data);
+    if (cookieExists) {
+      const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+        withCredentials: true,
+      });
+      userStore.setToken(data);
+    }
   };
 
   useEffect(() => {
@@ -133,23 +136,23 @@ const Pet = (props: Props) => {
 
   return (
     <>
-      <Link to="/search">
+      <Link to={-1 as any}>
         <BiArrowBack className="text-dark my-3" size={35} />
       </Link>
       <Row>
-        <Col md={6}>
+        <Col lg={6} className="d-flex justify-content-center">
           <Image
             src={
               pet?.type === 'Dog'
-                ? 'https://placedog.net/640/510'
-                : 'http://placekitten.com/640/510'
+                ? 'https://placedog.net/546/535'
+                : 'http://placekitten.com/546/535'
             }
             alt={pet?.name}
-            className="pt-2 "
+            className="rounded "
             fluid
           />
         </Col>
-        <Col md={6}>
+        <Col lg={6}>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h1>{pet?.name}</h1>
@@ -239,4 +242,4 @@ const Pet = (props: Props) => {
   );
 };
 
-export default Pet;
+export default PetPage;

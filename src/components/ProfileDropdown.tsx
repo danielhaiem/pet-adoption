@@ -40,7 +40,9 @@ const ProfileDropdown = (props: Props) => {
           <LinkContainer to="/profile">
             <Dropdown.Item>Profile</Dropdown.Item>
           </LinkContainer>
-          <Dropdown.Item>My Pets</Dropdown.Item>
+          <LinkContainer to="/mypets">
+            <Dropdown.Item>My Pets</Dropdown.Item>
+          </LinkContainer>
           <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

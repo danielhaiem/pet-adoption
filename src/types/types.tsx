@@ -9,7 +9,6 @@ type UserAuth = {
   savedPets?: (string | undefined)[];
   fosteredPets?: (string | undefined)[];
   adoptedPets?: (string | undefined)[];
-
   ok?: boolean;
 };
 
@@ -37,6 +36,12 @@ type Pet = {
   breed: string;
 }[];
 
+type MyPets = {
+  savedPets: Pet;
+  fosteredPets: Pet;
+  adoptedPets: Pet;
+};
+
 type PetType = {
   _id: string;
   type: string;
@@ -52,4 +57,4 @@ type PetType = {
   breed: string;
 };
 
-export type { UserAuth, Pet, ISignUp, PetType };
+export type { UserAuth, Pet, ISignUp, PetType, MyPets };

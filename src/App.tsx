@@ -6,8 +6,9 @@ import Footer from './components/Footer';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import Home from './pages/Home';
 import Search from './pages/Search';
-import Pet from './pages/Pet';
+import PetPage from './pages/Pet';
 import Profile from './pages/Profile';
+import MyPetsPage from './pages/MyPets';
 
 const App = () => {
   return (
@@ -20,8 +21,9 @@ const App = () => {
               <Routes>
                 <Route index element={<Home />} />
                 <Route path="/search" element={<Search />} />
-                <Route path="/pet/:id" element={<Pet />} />
+                <Route path="/pet/:id" element={<PetPage />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/mypets" element={<MyPetsPage />} />
               </Routes>
             </Container>
           </main>

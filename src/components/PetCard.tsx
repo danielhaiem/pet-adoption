@@ -1,21 +1,9 @@
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { PetType } from '../types/types';
 
 type Props = {
-  pet: {
-    _id: string;
-    type: string;
-    name: string;
-    adoptionStatus: string;
-    picture: string;
-    height: number;
-    weight: number;
-    color: string;
-    bio: string;
-    hypoallergnic: boolean;
-    dietery: [];
-    breed: string;
-  };
+  pet: PetType;
 };
 
 const PetCard = ({ pet }: Props) => {

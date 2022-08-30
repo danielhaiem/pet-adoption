@@ -1,8 +1,9 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
 import { AiOutlineHome, AiOutlineSetting } from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
+import { IoPawOutline } from 'react-icons/io5';
 import { LinkContainer } from 'react-router-bootstrap';
 import { userAuthStore } from '../../store';
 import FormModal from '../FormModal';
@@ -19,14 +20,11 @@ const NavigationBar = (props: Props) => {
 
   let cookie = document.cookie;
 
-  // console.log('cookie', cookie);
-  // console.log('userStore.token', userStore.token);
   const fetchUser = async () => {
     const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
       withCredentials: true,
     });
     userStore.setToken(data);
-    // console.log('profiledropdown data:', data);
   };
 
   useEffect(() => {
@@ -34,7 +32,6 @@ const NavigationBar = (props: Props) => {
     if (cookie) {
       setCookieExists(true);
     }
-    // console.log(cookieExists);
     if (cookie && Object.keys(userStore.token).length === 0) {
       fetchUser();
     }
@@ -82,6 +79,13 @@ const NavigationBar = (props: Props) => {
                 <Nav.Link className="link-hover d-flex gap-4">
                   <AiOutlineSetting className="align-self-center fs-4" />
                   <span className="fs-4">Profile</span>
+                </Nav.Link>
+              </LinkContainer>
+
+              <LinkContainer to="/mypets">
+                <Nav.Link className="link-hover d-flex gap-4">
+                  <IoPawOutline className="align-self-center fs-4" />
+                  <span className="fs-4">My Pets</span>
                 </Nav.Link>
               </LinkContainer>
             </Nav>
