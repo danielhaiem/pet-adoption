@@ -6,6 +6,7 @@ import {
   deleteSavedPet,
   adoptOrFosterPet,
   returnPet,
+  getUserPets,
 } from '../controllers/petController';
 import {
   isPetAdopted,
@@ -25,5 +26,7 @@ router.delete('/:id/save', verifyToken, deleteSavedPet);
 
 router.post('/:id/adopt', verifyToken, isPetAdopted, adoptOrFosterPet);
 router.post('/:id/return', verifyToken, isPetAvailable, returnPet);
+
+router.get('/user/:id', verifyToken, getUserPets);
 
 export default router;

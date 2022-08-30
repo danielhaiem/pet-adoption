@@ -178,6 +178,42 @@ const returnPet = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getUserPets = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await User.findById(req.body.userId, {
+      savedPets: 1,
+      fosteredPets: 1,
+      adoptedPets: 1,
+      _id: 0,
+    }).exec();
+    const myFosteredPets = await Pets.find(
+      {
+        _id: { $in: user?.fosteredPets },
+      },
+      { _id: 1, name: 1, adoptionStatus: 1, type: 1 }
+    );
+    const myAdoptedPets = await Pets.find(
+      {
+        _id: { $in: user?.adoptedPets },
+      },
+      { _id: 1, name: 1, adoptionStatus: 1, type: 1 }
+    );
+    const mySavedPets = await Pets.find(
+      {
+        _id: { $in: user?.savedPets },
+      },
+      { _id: 1, name: 1, adoptionStatus: 1, type: 1 }
+    );
+    res.json({
+      fosteredPets: myFosteredPets,
+      adoptedPets: myAdoptedPets,
+      savedPets: mySavedPets,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
   getSearchResults,
   getPetById,
@@ -185,4 +221,5 @@ export {
   deleteSavedPet,
   adoptOrFosterPet,
   returnPet,
+  getUserPets,
 };
