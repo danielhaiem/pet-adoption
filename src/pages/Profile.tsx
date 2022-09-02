@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { Form, Button, FloatingLabel, Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';

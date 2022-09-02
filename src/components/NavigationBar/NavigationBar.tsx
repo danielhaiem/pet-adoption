@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
-import { AiOutlineHome, AiOutlineSetting } from 'react-icons/ai';
+import { AiOutlineHome, AiOutlineSetting, AiOutlineForm } from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
 import { IoPawOutline } from 'react-icons/io5';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -18,8 +18,6 @@ const NavigationBar = (props: Props) => {
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const cookieExists = userAuthStore((state) => state.cookieExists);
 
-  let cookie = document.cookie;
-
   const fetchUser = async () => {
     const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
       withCredentials: true,
@@ -29,10 +27,10 @@ const NavigationBar = (props: Props) => {
 
   useEffect(() => {
     console.log('navigation bar useEffect render');
-    if (cookie) {
+    if (userStore.token) {
       setCookieExists(true);
     }
-    if (cookie && Object.keys(userStore.token).length === 0) {
+    if (Object.keys(userStore.token).length === 0) {
       fetchUser();
     }
   }, []);
@@ -82,10 +80,16 @@ const NavigationBar = (props: Props) => {
                 </Nav.Link>
               </LinkContainer>
 
-              <LinkContainer to="/mypets">
+              <LinkContainer to="/mypet">
                 <Nav.Link className="link-hover d-flex gap-4">
                   <IoPawOutline className="align-self-center fs-4" />
                   <span className="fs-4">My Pets</span>
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/addpet">
+                <Nav.Link className="link-hover d-flex gap-4">
+                  <AiOutlineForm className="align-self-center fs-4" />
+                  <span className="fs-4">Add Pet</span>
                 </Nav.Link>
               </LinkContainer>
             </Nav>

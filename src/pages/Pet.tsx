@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Button } from 'react-bootstrap';
 import { BiArrowBack } from 'react-icons/bi';
 import { MdFavoriteBorder } from 'react-icons/md';
@@ -26,7 +26,6 @@ const initPetState: PetType = {
 
 const PetPage = (props: Props) => {
   console.log('Pet Page Rerender');
-  const navigate = useNavigate();
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
 

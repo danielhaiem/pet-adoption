@@ -1,12 +1,20 @@
-import React from 'react';
+import { userAuthStore } from '../store';
 
 type Props = {};
 
 const Home = (props: Props) => {
   console.log('Home Page Rerender');
+  const userStore = userAuthStore();
+  const cookieExists = userAuthStore((state) => state.cookieExists);
+
   return (
     <div>
-      <h1>Welcome to Woof Meow Adoption</h1>
+      <h1>
+        Welcome{' '}
+        {cookieExists
+          ? `back ${userStore.token.fname} ${userStore.token.lname}`
+          : 'to Woof Meow Adoption'}
+      </h1>
       <p>
         Woof Meow Adoption is an online, searchable database of animals who need
         homes. Go ahead and sign up to adopt your new best friend today. Or go

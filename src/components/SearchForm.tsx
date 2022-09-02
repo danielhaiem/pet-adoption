@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useStore } from '../store';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import type { Pet } from '../types/types';
 
 type Props = {};
@@ -22,7 +22,6 @@ const validationSchema = Yup.object().shape({
 const SearchForm = (props: Props) => {
   const store = useStore();
   const [advancedSearch, setAdvancedSearch] = useState(false);
-  let location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   return (
     <>

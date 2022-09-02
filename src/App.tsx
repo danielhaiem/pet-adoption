@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from 'react-bootstrap';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -9,6 +8,7 @@ import Search from './pages/Search';
 import PetPage from './pages/Pet';
 import Profile from './pages/Profile';
 import MyPetsPage from './pages/MyPets';
+import AddPet from './pages/AddPet';
 
 const App = () => {
   return (
@@ -24,6 +24,7 @@ const App = () => {
                 <Route path="/pet/:id" element={<PetPage />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/mypets" element={<MyPetsPage />} />
+                <Route path="/addpet" element={<AddPet />} />
               </Routes>
             </Container>
           </main>

@@ -17,6 +17,7 @@ const PetCard = ({ pet }: Props) => {
               : 'http://placekitten.com/250/250'
           }
           variant="top"
+          className="rounded"
         />
       </Link>
       <Card.Body>

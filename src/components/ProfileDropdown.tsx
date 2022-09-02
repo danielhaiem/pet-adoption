@@ -15,12 +15,14 @@ const ProfileDropdown = (props: Props) => {
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
 
   const handleSignOut = async () => {
+    userStore.setToken({});
+    setCookieExists(false);
     const res = await axios.post('/signout', {
       withCredentials: true,
     });
-    setCookieExists(false);
-    userStore.setToken({});
-    navigate('/');
+    if (res) {
+      navigate('/');
+    }
   };
 
   return (

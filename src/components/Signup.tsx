@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -73,8 +74,7 @@ const Signup = (props: Props) => {
               withCredentials: true,
             });
             userStore.setToken(data);
-            let cookie = document.cookie;
-            if (cookie) {
+            if (data) {
               setCookieExists(true);
             }
           }

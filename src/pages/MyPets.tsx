@@ -8,6 +8,7 @@ import { MyPets, Pet } from '../types/types';
 type Props = {};
 
 const MyPetsPage = (props: Props) => {
+  console.log('mypets page rerender');
   const cookieExists = userAuthStore((state) => state.cookieExists);
 
   const [myPetList, setMyPetList] = useState<Pet>([]);
@@ -26,8 +27,9 @@ const MyPetsPage = (props: Props) => {
   };
 
   useEffect(() => {
+    console.log('mypets page fetchuser useeffect rerender');
     fetchUserPets();
-  }, []);
+  }, [cookieExists]);
 
   return (
     <>

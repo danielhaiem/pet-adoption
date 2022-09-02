@@ -1,9 +1,7 @@
-import React from 'react';
 import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { modalSignUpInStore, userAuthStore } from '../store';
 import type { UserAuth } from '../types/types';
 
@@ -22,7 +20,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = (props: Props) => {
-  let navigate = useNavigate();
   const userStore = userAuthStore();
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const setShow = modalSignUpInStore((state) => state.setShow);
@@ -53,8 +50,7 @@ const Login = (props: Props) => {
               withCredentials: true,
             });
             userStore.setToken(data);
-            let cookie = document.cookie;
-            if (cookie) {
+            if (data) {
               setCookieExists(true);
             }
           }
