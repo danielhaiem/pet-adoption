@@ -25,7 +25,6 @@ const initPetState: PetType = {
 };
 
 const PetPage = (props: Props) => {
-  console.log('Pet Page Rerender');
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
 
@@ -140,16 +139,7 @@ const PetPage = (props: Props) => {
       </Link>
       <Row>
         <Col lg={6} className="d-flex justify-content-center">
-          <Image
-            src={
-              pet?.type === 'Dog'
-                ? 'https://placedog.net/546/535'
-                : 'http://placekitten.com/546/535'
-            }
-            alt={pet?.name}
-            className="rounded "
-            fluid
-          />
+          <Image src={pet.picture} alt={pet?.name} className="rounded " fluid />
         </Col>
         <Col lg={6}>
           <ListGroup variant="flush">

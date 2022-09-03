@@ -26,7 +26,6 @@ const NavigationBar = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log('navigation bar useEffect render');
     if (userStore.token) {
       setCookieExists(true);
     }

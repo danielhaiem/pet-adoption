@@ -5,7 +5,6 @@ import { useStore } from '../store';
 type Props = {};
 
 const Search = (props: Props) => {
-  console.log('Search Page Rerender');
   const petSearchResultStore = useStore();
   const { pets } = petSearchResultStore;
   return (

@@ -37,7 +37,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const Profile = (props: Props) => {
-  console.log('Profile Page Rerender');
   const { token, setToken } = userAuthStore();
 
   return (

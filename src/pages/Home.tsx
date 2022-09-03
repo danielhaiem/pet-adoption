@@ -3,7 +3,6 @@ import { userAuthStore } from '../store';
 type Props = {};
 
 const Home = (props: Props) => {
-  console.log('Home Page Rerender');
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
 

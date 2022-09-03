@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
@@ -12,7 +13,7 @@ const AddPet = (props: Props) => {
     weight: 0,
     color: '',
     bio: '',
-    hypoallergnic: false,
+    hypoallergnic: '',
     dietery: '',
     breed: '',
   });
@@ -24,41 +25,65 @@ const AddPet = (props: Props) => {
     setPetInfo({ ...petInfo, [event.target.name]: event.target.value });
   };
 
+  let petHypoallergnic = false;
   const dieteryArray = petInfo.dietery.split(' ');
+  if (petInfo.hypoallergnic === 'true') petHypoallergnic = true;
+  if (petInfo.hypoallergnic === 'false') petHypoallergnic = false;
   // console.log('dieteryArray', dieteryArray);
   // console.log(petInfo);
   // console.log(petImage);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      const petData = {};
-      Object.assign(petData, { type: petInfo.type });
-      Object.assign(petData, { name: petInfo.name });
-      Object.assign(petData, { adoptionStatus: petInfo.adoptionStatus });
-      Object.assign(petData, { height: petInfo.height });
-      Object.assign(petData, { weight: petInfo.weight });
-      Object.assign(petData, { color: petInfo.color });
-      Object.assign(petData, { bio: petInfo.bio });
-      Object.assign(petData, { hypoallergnic: petInfo.hypoallergnic });
-      Object.assign(petData, { dietery: dieteryArray });
-      Object.assign(petData, { breed: petInfo.breed });
-      Object.assign(petData, { picture: petImage });
+      // const petData = {};
+      // Object.assign(petData, { type: petInfo.type });
+      // Object.assign(petData, { name: petInfo.name });
+      // Object.assign(petData, { adoptionStatus: petInfo.adoptionStatus });
+      // Object.assign(petData, { height: Number(petInfo.height) });
+      // Object.assign(petData, { weight: Number(petInfo.weight) });
+      // Object.assign(petData, { color: petInfo.color });
+      // Object.assign(petData, { bio: petInfo.bio });
+      // Object.assign(petData, { hypoallergnic: petHypoallergnic });
+      // Object.assign(petData, { dietery: dieteryArray });
+      // Object.assign(petData, { breed: petInfo.breed });
+      // Object.assign(petData, { picture: petImage });
+      // console.log('petData', petData);
 
-      // petData.append('type', petInfo.type);
-      // petData.append('name', petInfo.name);
-      // petData.append('adoptionStatus', petInfo.adoptionStatus);
-      // // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
-      // petData.append('height', petInfo.height as any);
-      // petData.append('weight', petInfo.weight as any);
-      // petData.append('color', petInfo.color);
-      // petData.append('bio', petInfo.bio);
-      // // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
-      // petData.append('hypoallergnic', petInfo.hypoallergnic as any);
-      // petData.append('dietery', petInfo.dietery);
-      // petData.append('breed', petInfo.breed);
-      // petData.append('noteImage', petImage);
+      const petData = new FormData();
 
-      console.log('petData', petData);
+      petData.append('type', petInfo.type);
+      petData.append('name', petInfo.name);
+      petData.append('adoptionStatus', petInfo.adoptionStatus);
+      // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
+      petData.append('height', Number(petInfo.height) as any);
+      petData.append('weight', Number(petInfo.weight) as any);
+      petData.append('color', petInfo.color);
+      petData.append('bio', petInfo.bio);
+      // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
+      petData.append('hypoallergnic', petHypoallergnic as any);
+      petData.append('dietery', dieteryArray as any);
+      petData.append('breed', petInfo.breed);
+      petData.append('picture', petImage);
+
+      console.log('petData', Object.fromEntries(petData));
+
+      const res = await axios.post(`/pet`, petData, { withCredentials: true });
+      console.log('res.data', res.data);
+      // if(res.data) {
+      //   setPetInfo({
+      //     type: '',
+      //     name: '',
+      //     adoptionStatus: '',
+      //     height: 0,
+      //     weight: 0,
+      //     color: '',
+      //     bio: '',
+      //     hypoallergnic: '',
+      //     dietery: '',
+      //     breed: '',
+      //   })
+      //   setPetImage('')
+      // }
     } catch (error) {
       console.log(error);
     }
