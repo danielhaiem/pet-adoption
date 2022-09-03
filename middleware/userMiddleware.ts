@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { User } from '../models/userModel';
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.cookies;
@@ -21,4 +22,14 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   );
 };
 
-export { verifyToken };
+const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await User.findById(req.body.userId, { isAdmin: 1 });
+  if (user.isAdmin === true) {
+    req.body.user = user;
+    next();
+    return;
+  }
+  res.status(400).send('Only Admins can access this page.');
+};
+
+export { verifyToken, isAdmin };

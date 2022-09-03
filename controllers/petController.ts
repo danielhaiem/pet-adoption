@@ -214,6 +214,44 @@ const getUserPets = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const addPet = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      type,
+      name,
+      adoptionStatus,
+      height,
+      weight,
+      color,
+      bio,
+      hypoallergnic,
+      dietery,
+      breed,
+      picture,
+    } = req.body;
+    const addedPet = await Pets.create({
+      type: type,
+      name: name,
+      adoptionStatus: adoptionStatus,
+      height: height,
+      weight: weight,
+      color: color,
+      bio: bio,
+      hypoallergnic: hypoallergnic,
+      dietery: dietery.split(','),
+      breed: breed,
+      picture: picture,
+    });
+    res.send({
+      ok: addedPet.true,
+    });
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+};
+
 export {
   getSearchResults,
   getPetById,
@@ -222,4 +260,5 @@ export {
   adoptOrFosterPet,
   returnPet,
   getUserPets,
+  addPet,
 };

@@ -43,4 +43,23 @@ const profileSchema: JSONSchemaType<IProfile> = {
   required: [],
 };
 
-export { signUpSchema, loginSchema, profileSchema };
+const petSchema = {
+  type: 'object',
+  properties: {
+    type: { type: 'string' },
+    name: { type: 'string' },
+    adoptionStatus: { type: 'string' },
+    height: { type: 'number' },
+    weight: { type: 'number' },
+    color: { type: 'string' },
+    bio: { type: 'string' },
+    hypoallergnic: { type: 'boolean' },
+    dietery: { type: 'array' },
+    breed: { type: 'string' },
+    picture: { type: 'string' },
+  },
+  required: ['type'],
+  additionalProperties: false,
+};
+
+export { signUpSchema, loginSchema, profileSchema, petSchema };

@@ -7,17 +7,28 @@ import {
   adoptOrFosterPet,
   returnPet,
   getUserPets,
+  addPet,
 } from '../controllers/petController';
+import { upload, uploadToCloudinary } from '../middleware/imagesMiddleware';
 import {
   isPetAdopted,
   isPetAvailable,
   isQueryValid,
 } from '../middleware/petsMiddleware';
-import { verifyToken } from '../middleware/userMiddleware';
+import { isAdmin, verifyToken } from '../middleware/userMiddleware';
 
 const router = Router();
 
 router.get('/', isQueryValid, getSearchResults);
+
+router.post(
+  '/',
+  verifyToken,
+  isAdmin,
+  upload.single('picture'),
+  uploadToCloudinary,
+  addPet
+);
 
 router.get('/:id', getPetById);
 

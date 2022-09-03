@@ -15,7 +15,11 @@ const login = (req: Request, res: Response) => {
         expiresIn: '1d',
       }
     );
-    res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie('token', token, {
+      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    });
 
     res.send({
       ok: true,
