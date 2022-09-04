@@ -190,19 +190,19 @@ const getUserPets = async (req: Request, res: Response): Promise<void> => {
       {
         _id: { $in: user?.fosteredPets },
       },
-      { _id: 1, name: 1, adoptionStatus: 1, type: 1 }
+      { _id: 1, name: 1, adoptionStatus: 1, type: 1, picture: 1 }
     );
     const myAdoptedPets = await Pets.find(
       {
         _id: { $in: user?.adoptedPets },
       },
-      { _id: 1, name: 1, adoptionStatus: 1, type: 1 }
+      { _id: 1, name: 1, adoptionStatus: 1, type: 1, picture: 1 }
     );
     const mySavedPets = await Pets.find(
       {
         _id: { $in: user?.savedPets },
       },
-      { _id: 1, name: 1, adoptionStatus: 1, type: 1 }
+      { _id: 1, name: 1, adoptionStatus: 1, type: 1, picture: 1 }
     );
     res.json({
       fosteredPets: myFosteredPets,

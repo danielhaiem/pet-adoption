@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getUser, getUsers } from '../controllers/userController';
-import { verifyToken } from '../middleware/userMiddleware';
+import { getUser, getUserFull, getUsers } from '../controllers/userController';
+import { isAdmin, verifyToken } from '../middleware/userMiddleware';
 import { profileSchema } from '../schemas/allSchemas';
 import validateBody from '../middleware/validateBody';
 import {
@@ -12,7 +12,7 @@ import { updateUserInfo } from '../controllers/profileController';
 
 const router = Router();
 
-router.get('/', verifyToken, getUsers);
+router.get('/', verifyToken, isAdmin, getUsers);
 
 router.get('/:id', verifyToken, getUser);
 router.put(
@@ -24,5 +24,7 @@ router.put(
   isNewUser,
   updateUserInfo
 );
+
+router.get('/:id/full', verifyToken, isAdmin, getUserFull);
 
 export default router;
