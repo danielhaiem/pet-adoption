@@ -29,25 +29,10 @@ const AddPet = (props: Props) => {
   const dieteryArray = petInfo.dietery.split(' ');
   if (petInfo.hypoallergnic === 'true') petHypoallergnic = true;
   if (petInfo.hypoallergnic === 'false') petHypoallergnic = false;
-  // console.log('dieteryArray', dieteryArray);
-  // console.log(petInfo);
-  // console.log(petImage);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      // const petData = {};
-      // Object.assign(petData, { type: petInfo.type });
-      // Object.assign(petData, { name: petInfo.name });
-      // Object.assign(petData, { adoptionStatus: petInfo.adoptionStatus });
-      // Object.assign(petData, { height: Number(petInfo.height) });
-      // Object.assign(petData, { weight: Number(petInfo.weight) });
-      // Object.assign(petData, { color: petInfo.color });
-      // Object.assign(petData, { bio: petInfo.bio });
-      // Object.assign(petData, { hypoallergnic: petHypoallergnic });
-      // Object.assign(petData, { dietery: dieteryArray });
-      // Object.assign(petData, { breed: petInfo.breed });
-      // Object.assign(petData, { picture: petImage });
-      // console.log('petData', petData);
 
       const petData = new FormData();
 
@@ -68,22 +53,6 @@ const AddPet = (props: Props) => {
       console.log('petData', Object.fromEntries(petData));
 
       const res = await axios.post(`/pet`, petData, { withCredentials: true });
-      console.log('res.data', res.data);
-      // if(res.data) {
-      //   setPetInfo({
-      //     type: '',
-      //     name: '',
-      //     adoptionStatus: '',
-      //     height: 0,
-      //     weight: 0,
-      //     color: '',
-      //     bio: '',
-      //     hypoallergnic: '',
-      //     dietery: '',
-      //     breed: '',
-      //   })
-      //   setPetImage('')
-      // }
     } catch (error) {
       console.log(error);
     }

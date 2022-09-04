@@ -57,4 +57,59 @@ type PetType = {
   breed: string;
 };
 
-export type { UserAuth, Pet, ISignUp, PetType, MyPets };
+type UsersType = {
+  _id?: string;
+  email?: string;
+  fname?: string;
+  lname?: string;
+  tel?: string;
+  isAdmin?: boolean;
+  bio?: string;
+  savedPets?: Pet;
+  fosteredPets?: Pet;
+  adoptedPets?: Pet;
+}[];
+
+type UserType = {
+  user: {
+    _id: string;
+    email: string;
+    fname: string;
+    lname: string;
+    tel: string;
+    isAdmin: boolean;
+    bio?: string;
+    savedPets: Pet;
+    fosteredPets: Pet;
+    adoptedPets: Pet;
+    ok?: boolean;
+  };
+  savedPets: Pet;
+  fosteredPets: Pet;
+  adoptedPets: Pet;
+};
+
+type UserType2 = {
+  _id: string;
+  email: string;
+  fname: string;
+  lname: string;
+  tel: string;
+  isAdmin: boolean;
+  bio?: string;
+  savedPets: Pet;
+  fosteredPets: Pet;
+  adoptedPets: Pet;
+  ok?: boolean;
+};
+
+export type {
+  UserAuth,
+  Pet,
+  ISignUp,
+  PetType,
+  MyPets,
+  UsersType,
+  UserType,
+  UserType2,
+};

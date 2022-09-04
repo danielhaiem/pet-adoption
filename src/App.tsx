@@ -9,6 +9,9 @@ import PetPage from './pages/Pet';
 import Profile from './pages/Profile';
 import MyPetsPage from './pages/MyPets';
 import AddPet from './pages/AddPet';
+import { AdminRoute, UserRoute } from './components/PrivateRoute';
+import AdminDashboard from './pages/AdminDashboard';
+import User from './pages/User';
 
 const App = () => {
   return (
@@ -22,9 +25,46 @@ const App = () => {
                 <Route index element={<Home />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/pet/:id" element={<PetPage />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/mypets" element={<MyPetsPage />} />
-                <Route path="/addpet" element={<AddPet />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <UserRoute>
+                      <Profile />
+                    </UserRoute>
+                  }
+                />
+                <Route
+                  path="/mypets"
+                  element={
+                    <UserRoute>
+                      <MyPetsPage />
+                    </UserRoute>
+                  }
+                />
+                <Route
+                  path="/addpet"
+                  element={
+                    <AdminRoute>
+                      <AddPet />
+                    </AdminRoute>
+                  }
+                />
+                <Route
+                  path="/admindashboard"
+                  element={
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  }
+                />
+                <Route
+                  path="/user/:id/full"
+                  element={
+                    <AdminRoute>
+                      <User />
+                    </AdminRoute>
+                  }
+                />
               </Routes>
             </Container>
           </main>

@@ -39,10 +39,18 @@ const MyPetsPage = (props: Props) => {
           justify
         >
           <Tab eventKey="mypets" title="My Pets">
-            <PetList petsList={myPetList} />
+            {myPetList.length > 0 ? (
+              <PetList petsList={myPetList} />
+            ) : (
+              'You currently do not own or foster any pets'
+            )}
           </Tab>
           <Tab eventKey="savedpets" title="Favorite Pets">
-            <PetList petsList={favoriteList} />
+            {favoriteList.length > 0 ? (
+              <PetList petsList={favoriteList} />
+            ) : (
+              'You currently do not have any favorited pets'
+            )}
           </Tab>
         </Tabs>{' '}
       </Container>

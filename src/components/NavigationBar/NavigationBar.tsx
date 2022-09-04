@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
-import { AiOutlineHome, AiOutlineSetting, AiOutlineForm } from 'react-icons/ai';
+import {
+  AiOutlineHome,
+  AiOutlineSetting,
+  AiOutlineForm,
+  AiOutlineKey,
+} from 'react-icons/ai';
 import { BsSearch } from 'react-icons/bs';
 import { IoPawOutline } from 'react-icons/io5';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -17,23 +22,21 @@ const NavigationBar = (props: Props) => {
   const userStore = userAuthStore();
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const cookieExists = userAuthStore((state) => state.cookieExists);
-
   const fetchUser = async () => {
     const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
       withCredentials: true,
     });
-    userStore.setToken(data);
-  };
-
-  useEffect(() => {
-    if (userStore.token) {
+    if (data) {
+      userStore.setToken(data);
       setCookieExists(true);
     }
-    if (Object.keys(userStore.token).length === 0) {
-      fetchUser();
+  };
+  useEffect(() => {
+    fetchUser();
+    if (Object.keys(userStore.token).length > 0) {
+      setCookieExists(true);
     }
   }, []);
-
   return (
     <Navbar
       collapseOnSelect
@@ -72,25 +75,40 @@ const NavigationBar = (props: Props) => {
                 </Nav.Link>
               </LinkContainer>
 
-              <LinkContainer to="/profile">
-                <Nav.Link className="link-hover d-flex gap-4">
-                  <AiOutlineSetting className="align-self-center fs-4" />
-                  <span className="fs-4">Profile</span>
-                </Nav.Link>
-              </LinkContainer>
+              {cookieExists && (
+                <LinkContainer to="/profile">
+                  <Nav.Link className="link-hover d-flex gap-4">
+                    <AiOutlineSetting className="align-self-center fs-4" />
+                    <span className="fs-4">Profile</span>
+                  </Nav.Link>
+                </LinkContainer>
+              )}
 
-              <LinkContainer to="/mypet">
-                <Nav.Link className="link-hover d-flex gap-4">
-                  <IoPawOutline className="align-self-center fs-4" />
-                  <span className="fs-4">My Pets</span>
-                </Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/addpet">
-                <Nav.Link className="link-hover d-flex gap-4">
-                  <AiOutlineForm className="align-self-center fs-4" />
-                  <span className="fs-4">Add Pet</span>
-                </Nav.Link>
-              </LinkContainer>
+              {cookieExists && (
+                <LinkContainer to="/mypets">
+                  <Nav.Link className="link-hover d-flex gap-4">
+                    <IoPawOutline className="align-self-center fs-4" />
+                    <span className="fs-4">My Pets</span>
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+
+              {userStore.token.isAdmin === true && (
+                <LinkContainer to="/addpet">
+                  <Nav.Link className="link-hover d-flex gap-4">
+                    <AiOutlineForm className="align-self-center fs-4" />
+                    <span className="fs-4">Add Pet</span>
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+              {userStore.token.isAdmin === true && (
+                <LinkContainer to="/admindashboard">
+                  <Nav.Link className="link-hover d-flex gap-4">
+                    <AiOutlineKey className="align-self-center fs-4" />
+                    <span className="fs-4">Admin Dashboard</span>
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
