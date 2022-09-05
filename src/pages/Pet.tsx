@@ -157,7 +157,7 @@ const PetPage = (props: Props) => {
               {pet?.adoptionStatus ? pet?.adoptionStatus : "N/A"}
             </ListGroup.Item>
             <ListGroup.Item className="d-flex gap-4">
-              <span>Height: {pet?.height ? pet?.height : "N/A"}cm</span>
+              <span>Height: {pet?.height ? pet?.height : "N/A"}in</span>
               <span>Weight: {pet?.weight ? pet?.weight : "N/A"}lbs</span>
             </ListGroup.Item>
             <ListGroup.Item>

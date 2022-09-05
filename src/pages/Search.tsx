@@ -1,6 +1,6 @@
-import PetList from '../components/PetList';
-import SearchForm from '../components/SearchForm';
-import { useStore } from '../store';
+import PetList from "../components/PetList";
+import SearchForm from "../components/SearchForm";
+import { useStore } from "../store";
 
 type Props = {};
 

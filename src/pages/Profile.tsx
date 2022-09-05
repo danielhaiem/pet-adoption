@@ -90,16 +90,7 @@ const Profile = (props: Props) => {
           setSubmitting(false);
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          isValid,
-        }) => (
+        {({ values, errors, touched, handleChange, handleSubmit }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Container>
               <h1 className="mb-3">Profile Settings</h1>

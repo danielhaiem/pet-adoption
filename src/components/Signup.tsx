@@ -48,7 +48,6 @@ const Signup = (props: Props) => {
   const userStore = userAuthStore();
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const setShow = modalSignUpInStore((state) => state.setShow);
-  //Use React Query to save to synchronize information
   return (
     <>
       <Formik
@@ -64,7 +63,6 @@ const Signup = (props: Props) => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
 
           const res = await axios.post("/signup", values);
@@ -84,16 +82,7 @@ const Signup = (props: Props) => {
           setShow(false);
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          isValid,
-        }) => (
+        {({ values, errors, touched, handleChange, handleSubmit }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Modal.Header>
               <Modal.Title>Signup</Modal.Title>
@@ -112,7 +101,6 @@ const Signup = (props: Props) => {
                   placeholder="name@example.com"
                   isValid={touched.email && !errors.email}
                   isInvalid={!!errors.email}
-                  // onBlur={handleBlur}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}

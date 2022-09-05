@@ -60,16 +60,7 @@ const Login = (props: Props) => {
           setShow(false);
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          isValid,
-        }) => (
+        {({ values, errors, touched, handleChange, handleSubmit }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Modal.Header>
               <Modal.Title>Login</Modal.Title>

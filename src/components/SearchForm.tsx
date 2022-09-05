@@ -1,21 +1,19 @@
-import { useState } from 'react';
-import { Button, Row, Col } from 'react-bootstrap';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { useStore } from '../store';
-import { useSearchParams } from 'react-router-dom';
-import type { Pet } from '../types/types';
+import { useState } from "react";
+import { Button, Row, Col } from "react-bootstrap";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { useStore } from "../store";
+import { useSearchParams } from "react-router-dom";
+import type { Pet } from "../types/types";
 
 type Props = {};
-
-const isNumberRegEx = /^\d+$/s;
 
 const validationSchema = Yup.object().shape({
   type: Yup.string(),
   adoptionStatus: Yup.string(),
-  height: Yup.string().matches(isNumberRegEx, 'Height must be a whole number'),
-  weight: Yup.string().matches(isNumberRegEx, 'Weight must be a whole number'),
+  height: Yup.string(),
+  weight: Yup.string(),
   name: Yup.string(),
 });
 
@@ -27,11 +25,11 @@ const SearchForm = (props: Props) => {
     <>
       <Formik
         initialValues={{
-          type: '',
-          adoptionStatus: '',
-          height: '',
-          weight: '',
-          name: '',
+          type: "",
+          adoptionStatus: "",
+          height: "",
+          weight: "",
+          name: "",
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
@@ -40,20 +38,14 @@ const SearchForm = (props: Props) => {
           setSubmitting(true);
 
           const searchObj = {};
-          // Object.keys(values).forEach((val)=> searchObj[val] = values[val]);
           if (values.type) Object.assign(searchObj, { type: values.type });
           if (values.adoptionStatus)
             Object.assign(searchObj, { adoptionStatus: values.adoptionStatus });
           if (values.height)
-            Object.assign(searchObj, { height: Number(values.height) });
+            Object.assign(searchObj, { height: values.height });
           if (values.weight)
-            Object.assign(searchObj, { weight: Number(values.weight) });
-          if (values.name)
-            Object.assign(searchObj, {
-              name:
-                values.name[0].toUpperCase() +
-                values.name.slice(1).toLowerCase(),
-            });
+            Object.assign(searchObj, { weight: values.weight });
+          if (values.name) Object.assign(searchObj, { name: values.name });
 
           const fetchSearchResults = async () => {
             if (
@@ -63,12 +55,12 @@ const SearchForm = (props: Props) => {
               values.weight ||
               values.name
             ) {
-              const { data }: { data: Pet } = await axios.get('/pet', {
+              const { data }: { data: Pet } = await axios.get("/pet", {
                 params: searchObj,
               });
               store.setPets(data);
             } else {
-              const { data }: { data: Pet } = await axios.get('/pet');
+              const { data }: { data: Pet } = await axios.get("/pet");
               store.setPets(data);
             }
           };
@@ -78,16 +70,7 @@ const SearchForm = (props: Props) => {
           setSubmitting(false);
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          isValid,
-        }) => (
+        {({ handleSubmit }) => (
           <Form
             noValidate
             onSubmit={handleSubmit}
@@ -132,31 +115,25 @@ const SearchForm = (props: Props) => {
                 </Col>
                 <Col sm={12} md={6} lg={4} xl={4}>
                   <label className="form-label" htmlFor="height">
-                    Height (cm):
+                    Height (in):
                   </label>
-                  <Field
-                    type="text"
-                    name="height"
-                    className="form-input form-control"
-                    placeholder="Enter number i.e. 5"
-                  />
-                  {errors.height && touched.height ? (
-                    <div className="text-danger mt-1">{errors.height}</div>
-                  ) : null}
+                  <Field as="select" name="height" className="form-select ">
+                    <option>Any:</option>
+                    <option value="small">Small(0-25 in)</option>
+                    <option value="medium">Medium(26-60 in)</option>
+                    <option value="large">Large(61+ in)</option>
+                  </Field>
                 </Col>
                 <Col sm={12} md={6} lg={4} xl={4}>
                   <label className="form-label" htmlFor="weight">
                     Weight (lbs):
                   </label>
-                  <Field
-                    type="text"
-                    name="weight"
-                    className="form-input form-control"
-                    placeholder="Enter number i.e. 25"
-                  />
-                  {errors.weight && touched.weight ? (
-                    <div className="text-danger mt-1">{errors.weight}</div>
-                  ) : null}
+                  <Field as="select" name="weight" className="form-select ">
+                    <option>Any:</option>
+                    <option value="small">Small(0-25 lbs)</option>
+                    <option value="medium">Medium(26-60 lbs)</option>
+                    <option value="large">Large(61+ lbs)</option>
+                  </Field>
                 </Col>
                 <Col sm={12} md={6} lg={4} xl={4}>
                   <label className="form-label" htmlFor="name">

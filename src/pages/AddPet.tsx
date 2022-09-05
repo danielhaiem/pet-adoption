@@ -49,7 +49,7 @@ const AddPet = (props: Props) => {
   const [petImage, setPetImage] = useState("");
 
   useEffect(() => {
-    fetchPet();
+    if (params.id !== ":id") fetchPet();
   }, [params]);
 
   const handlePetInfo: ChangeEventHandler = (
@@ -72,13 +72,11 @@ const AddPet = (props: Props) => {
       petData.append("type", petInfo.type);
       petData.append("name", petInfo.name);
       petData.append("adoptionStatus", petInfo.adoptionStatus);
-      // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
       petData.append("height", petInfo.height.toString());
       petData.append("weight", petInfo.weight.toString());
       petData.append("color", petInfo.color);
       petData.append("bio", petInfo.bio);
       petData.append("hypoallergnic", petHypoallergnic.toString());
-      // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
       petData.append("dietery", dieteryArray as any);
       petData.append("breed", petInfo.breed);
       petData.append("picture", petImage);
@@ -97,7 +95,6 @@ const AddPet = (props: Props) => {
     }
   };
 
-  // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
   const handleImage = (e: any) => {
     setPetImage(e.target.files[0]);
   };
@@ -145,7 +142,7 @@ const AddPet = (props: Props) => {
               </Form.Select>
             </div>
             <div>
-              <Form.Label className="formLabel">Height (cm):</Form.Label>
+              <Form.Label className="formLabel">Height (in):</Form.Label>
               <Form.Control
                 onChange={handlePetInfo}
                 placeholder="Enter number i.e. 5"
