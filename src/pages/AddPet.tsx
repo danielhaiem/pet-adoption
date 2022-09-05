@@ -1,23 +1,56 @@
-import axios from 'axios';
-import { ChangeEvent, ChangeEventHandler, useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import axios from "axios";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useState,
+} from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { PetType } from "../types/types";
 
 type Props = {};
 
 const AddPet = (props: Props) => {
-  const [petInfo, setPetInfo] = useState({
-    type: '',
-    name: '',
-    adoptionStatus: '',
+  const params = useParams();
+
+  const fetchPet = async () => {
+    const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
+    if (data) {
+      const dataAltered = {
+        type: data?.type,
+        name: data?.name,
+        adoptionStatus: data?.adoptionStatus,
+        height: data?.height,
+        weight: data?.weight,
+        color: data?.color,
+        bio: data?.bio,
+        hypoallergnic: data?.hypoallergnic === false ? "false" : "true",
+        dietery: data?.dietery?.join(" "),
+        breed: data?.breed,
+      };
+      setPetInfo(dataAltered);
+    }
+  };
+
+  const initialPetInfo = {
+    type: "",
+    name: "",
+    adoptionStatus: "",
     height: 0,
     weight: 0,
-    color: '',
-    bio: '',
-    hypoallergnic: '',
-    dietery: '',
-    breed: '',
-  });
-  const [petImage, setPetImage] = useState('');
+    color: "",
+    bio: "",
+    hypoallergnic: "",
+    dietery: "",
+    breed: "",
+  };
+  const [petInfo, setPetInfo] = useState(initialPetInfo);
+  const [petImage, setPetImage] = useState("");
+
+  useEffect(() => {
+    fetchPet();
+  }, [params]);
 
   const handlePetInfo: ChangeEventHandler = (
     event: ChangeEvent<HTMLInputElement>
@@ -26,9 +59,9 @@ const AddPet = (props: Props) => {
   };
 
   let petHypoallergnic = false;
-  const dieteryArray = petInfo.dietery.split(' ');
-  if (petInfo.hypoallergnic === 'true') petHypoallergnic = true;
-  if (petInfo.hypoallergnic === 'false') petHypoallergnic = false;
+  const dieteryArray = petInfo.dietery.split(" ");
+  if (petInfo.hypoallergnic === "true") petHypoallergnic = true;
+  if (petInfo.hypoallergnic === "false") petHypoallergnic = false;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -36,23 +69,29 @@ const AddPet = (props: Props) => {
 
       const petData = new FormData();
 
-      petData.append('type', petInfo.type);
-      petData.append('name', petInfo.name);
-      petData.append('adoptionStatus', petInfo.adoptionStatus);
+      petData.append("type", petInfo.type);
+      petData.append("name", petInfo.name);
+      petData.append("adoptionStatus", petInfo.adoptionStatus);
       // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
-      petData.append('height', Number(petInfo.height) as any);
-      petData.append('weight', Number(petInfo.weight) as any);
-      petData.append('color', petInfo.color);
-      petData.append('bio', petInfo.bio);
+      petData.append("height", petInfo.height.toString());
+      petData.append("weight", petInfo.weight.toString());
+      petData.append("color", petInfo.color);
+      petData.append("bio", petInfo.bio);
+      petData.append("hypoallergnic", petHypoallergnic.toString());
       // !!!!!!!! FIND CORRECT TYPE !!!!!!!!!!!!!!!!!
-      petData.append('hypoallergnic', petHypoallergnic as any);
-      petData.append('dietery', dieteryArray as any);
-      petData.append('breed', petInfo.breed);
-      petData.append('picture', petImage);
+      petData.append("dietery", dieteryArray as any);
+      petData.append("breed", petInfo.breed);
+      petData.append("picture", petImage);
 
-      console.log('petData', Object.fromEntries(petData));
-
-      const res = await axios.post(`/pet`, petData, { withCredentials: true });
+      if (params.id === ":id") {
+        const res = await axios.post(`/pet`, petData, {
+          withCredentials: true,
+        });
+      } else {
+        const res = await axios.put(`/pet/${params.id}`, petData, {
+          withCredentials: true,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +104,7 @@ const AddPet = (props: Props) => {
 
   return (
     <Container fluid>
-      <h1>Add Pet</h1>
+      <h1>{params.id === ":id" ? "Add Pet" : "Edit Pet"}</h1>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col lg={6} className="d-flex flex-column gap-3">
@@ -75,6 +114,7 @@ const AddPet = (props: Props) => {
                 aria-label="Default select example"
                 name="type"
                 onChange={handlePetInfo}
+                value={petInfo.type}
               >
                 <option>Filter by type:</option>
                 <option value="Dog">Dog</option>
@@ -96,6 +136,7 @@ const AddPet = (props: Props) => {
                 aria-label="Default select example"
                 name="adoptionStatus"
                 onChange={handlePetInfo}
+                value={petInfo.adoptionStatus}
               >
                 <option>Filter by adoption status:</option>
                 <option value="Available">Available</option>
@@ -148,22 +189,16 @@ const AddPet = (props: Props) => {
             </div>
             <div>
               <Form.Label className="formLabel">Hypoallergnic:</Form.Label>
-              <Form.Group>
-                <Form.Check
-                  type="radio"
-                  name="hypoallergnic"
-                  label="Yes"
-                  value="true"
-                  onChange={handlePetInfo}
-                />
-                <Form.Check
-                  type="radio"
-                  name="hypoallergnic"
-                  label="No"
-                  value="false"
-                  onChange={handlePetInfo}
-                />
-              </Form.Group>
+              <Form.Select
+                aria-label="Default select example"
+                name="hypoallergnic"
+                onChange={handlePetInfo}
+                value={petInfo.hypoallergnic}
+              >
+                <option>Filter hypoallergnic:</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </Form.Select>
             </div>
             <div>
               <Form.Label className="formLabel">Dietery:</Form.Label>
@@ -202,7 +237,7 @@ const AddPet = (props: Props) => {
         <Row className="mt-2">
           <div className="d-inline-flex flex-row-reverse">
             <Button variant="outline-success" type="submit">
-              Submit
+              {params.id === ":id" ? "Submit" : "Update"}
             </Button>
           </div>
         </Row>

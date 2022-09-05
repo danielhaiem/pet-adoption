@@ -1,10 +1,10 @@
 /* eslint-disable no-useless-escape */
-import { Form, Button, FloatingLabel, Container } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import type { UserAuth } from '../types/types';
-import { userAuthStore } from '../store';
-import axios from 'axios';
+import { Form, Button, FloatingLabel, Container } from "react-bootstrap";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import type { UserAuth } from "../types/types";
+import { userAuthStore } from "../store";
+import axios from "axios";
 
 type Props = {};
 
@@ -15,25 +15,25 @@ const passwordRegExp =
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
-    .email('*Must be a valid email address')
-    .max(50, '*Email must be less than 50 characters'),
+    .email("*Must be a valid email address")
+    .max(50, "*Email must be less than 50 characters"),
   password: Yup.string()
-    .min(6, 'Password should be of minimum 6 characters length')
+    .min(6, "Password should be of minimum 6 characters length")
     .matches(
       passwordRegExp,
-      'Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character'
+      "Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
     ),
   repassword: Yup.string()
-    .min(6, 'Password should be of minimum 6 characters length')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    .min(6, "Password should be of minimum 6 characters length")
+    .oneOf([Yup.ref("password"), null], "Passwords must match"),
   fname: Yup.string()
-    .min(2, '*Names must have at least 2 characters')
+    .min(2, "*Names must have at least 2 characters")
     .max(15, "*Names can't be longer than 15 characters"),
   lname: Yup.string()
-    .min(2, '*Names must have at least 2 characters')
+    .min(2, "*Names must have at least 2 characters")
     .max(20, "*Names can't be longer than 20 characters"),
-  tel: Yup.string().matches(phoneRegExp, '*Phone number is not valid'),
-  bio: Yup.string().max(140, 'Bio can be max 140 characters'),
+  tel: Yup.string().matches(phoneRegExp, "*Phone number is not valid"),
+  bio: Yup.string().max(140, "Bio can be max 140 characters"),
 });
 
 const Profile = (props: Props) => {
@@ -44,13 +44,13 @@ const Profile = (props: Props) => {
       <Formik
         enableReinitialize
         initialValues={{
-          email: token.email || '',
-          password: '',
-          repassword: '',
-          fname: token.fname || '',
-          lname: token.lname || '',
-          tel: token.tel || '',
-          bio: token.bio || '',
+          email: token.email || "",
+          password: "",
+          repassword: "",
+          fname: token.fname || "",
+          lname: token.lname || "",
+          tel: token.tel || "",
+          bio: token.bio || "",
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
@@ -78,9 +78,9 @@ const Profile = (props: Props) => {
           if (values.bio && values.bio !== token.bio)
             Object.assign(userObj, { bio: values.bio });
 
-          const res = await axios.put('/user/:id', userObj);
+          const res = await axios.put("/user/id", userObj);
           if (res.data) {
-            const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+            const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
               withCredentials: true,
             });
             setToken(data);
@@ -222,7 +222,7 @@ const Profile = (props: Props) => {
                   placeholder="Enter bio..."
                   isValid={touched.bio && !errors.bio}
                   isInvalid={!!errors.bio}
-                  style={{ height: '100px' }}
+                  style={{ height: "100px" }}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.bio}

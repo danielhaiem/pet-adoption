@@ -1,9 +1,9 @@
-import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { modalSignUpInStore, userAuthStore } from '../store';
-import type { UserAuth } from '../types/types';
+import { Modal, Form, Button, FloatingLabel } from "react-bootstrap";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { modalSignUpInStore, userAuthStore } from "../store";
+import type { UserAuth } from "../types/types";
 
 type Props = {
   handleClose: () => void;
@@ -11,12 +11,12 @@ type Props = {
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
-    .email('*Must be a valid email address')
-    .max(50, '*Email must be less than 50 characters')
-    .required('*Email is required'),
+    .email("*Must be a valid email address")
+    .max(50, "*Email must be less than 50 characters")
+    .required("*Email is required"),
   password: Yup.string()
-    .min(6, 'Password should be of minimum 6 characters length')
-    .required('Password is required'),
+    .min(6, "Password should be of minimum 6 characters length")
+    .required("Password is required"),
 });
 
 const Login = (props: Props) => {
@@ -28,8 +28,8 @@ const Login = (props: Props) => {
     <>
       <Formik
         initialValues={{
-          email: '',
-          password: '',
+          email: "",
+          password: "",
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
@@ -38,7 +38,7 @@ const Login = (props: Props) => {
           setSubmitting(true);
 
           const { data }: { data: UserAuth } = await axios.post(
-            '/login',
+            "/login",
             values,
             {
               withCredentials: true,
@@ -46,7 +46,7 @@ const Login = (props: Props) => {
           );
 
           if (data) {
-            const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+            const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
               withCredentials: true,
             });
             userStore.setToken(data);

@@ -1,20 +1,20 @@
-import axios from 'axios';
-import { useEffect } from 'react';
-import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
+import axios from "axios";
+import { useEffect } from "react";
+import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
 import {
   AiOutlineHome,
   AiOutlineSetting,
   AiOutlineForm,
   AiOutlineKey,
-} from 'react-icons/ai';
-import { BsSearch } from 'react-icons/bs';
-import { IoPawOutline } from 'react-icons/io5';
-import { LinkContainer } from 'react-router-bootstrap';
-import { userAuthStore } from '../../store';
-import FormModal from '../FormModal';
-import ProfileDropdown from '../ProfileDropdown';
-import './NavigationBar.css';
-import type { UserAuth } from '../../types/types';
+} from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
+import { IoPawOutline } from "react-icons/io5";
+import { LinkContainer } from "react-router-bootstrap";
+import { userAuthStore } from "../../store";
+import FormModal from "../FormModal";
+import ProfileDropdown from "../ProfileDropdown";
+import "./NavigationBar.css";
+import type { UserAuth } from "../../types/types";
 
 type Props = {};
 
@@ -23,7 +23,7 @@ const NavigationBar = (props: Props) => {
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const cookieExists = userAuthStore((state) => state.cookieExists);
   const fetchUser = async () => {
-    const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+    const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
       withCredentials: true,
     });
     if (data) {
@@ -94,7 +94,7 @@ const NavigationBar = (props: Props) => {
               )}
 
               {userStore.token.isAdmin === true && (
-                <LinkContainer to="/addpet">
+                <LinkContainer to="/addpet/:id">
                   <Nav.Link className="link-hover d-flex gap-4">
                     <AiOutlineForm className="align-self-center fs-4" />
                     <span className="fs-4">Add Pet</span>

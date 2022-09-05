@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Container, Tabs, Tab } from 'react-bootstrap';
-import PetList from '../components/PetList';
-import { userAuthStore } from '../store';
-import { MyPets, Pet } from '../types/types';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Container, Tabs, Tab } from "react-bootstrap";
+import PetList from "../components/PetList";
+import { userAuthStore } from "../store";
+import { MyPets, Pet } from "../types/types";
 
 type Props = {};
 
@@ -15,7 +15,7 @@ const MyPetsPage = (props: Props) => {
 
   const fetchUserPets = async () => {
     if (cookieExists) {
-      const { data }: { data: MyPets } = await axios.get(`/pet/user/:id`, {
+      const { data }: { data: MyPets } = await axios.get(`/pet/user/id`, {
         withCredentials: true,
       });
       if (data) {
@@ -42,17 +42,17 @@ const MyPetsPage = (props: Props) => {
             {myPetList.length > 0 ? (
               <PetList petsList={myPetList} />
             ) : (
-              'You currently do not own or foster any pets'
+              "You currently do not own or foster any pets"
             )}
           </Tab>
           <Tab eventKey="savedpets" title="Favorite Pets">
             {favoriteList.length > 0 ? (
               <PetList petsList={favoriteList} />
             ) : (
-              'You currently do not have any favorited pets'
+              "You currently do not have any favorited pets"
             )}
           </Tab>
-        </Tabs>{' '}
+        </Tabs>{" "}
       </Container>
     </>
   );

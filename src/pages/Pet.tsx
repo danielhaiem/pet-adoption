@@ -1,30 +1,32 @@
-import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Row, Col, Image, ListGroup, Button } from 'react-bootstrap';
-import { BiArrowBack } from 'react-icons/bi';
-import { MdFavoriteBorder } from 'react-icons/md';
-import axios from 'axios';
-import type { PetType, UserAuth } from '../types/types';
-import { modalSignUpInStore, userAuthStore } from '../store';
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Row, Col, Image, ListGroup, Button } from "react-bootstrap";
+import { BiArrowBack } from "react-icons/bi";
+import { MdFavoriteBorder } from "react-icons/md";
+import axios from "axios";
+import type { PetType, UserAuth } from "../types/types";
+import { modalSignUpInStore, userAuthStore } from "../store";
+import { AiOutlineEdit } from "react-icons/ai";
 
 type Props = {};
 
 const initPetState: PetType = {
-  _id: '',
-  type: '',
-  name: '',
-  adoptionStatus: '',
-  picture: '',
+  _id: "",
+  type: "",
+  name: "",
+  adoptionStatus: "",
+  picture: "",
   height: 0,
   weight: 0,
-  color: '',
-  bio: '',
+  color: "",
+  bio: "",
   hypoallergnic: false,
   dietery: [],
-  breed: '',
+  breed: "",
 };
 
 const PetPage = (props: Props) => {
+  const navigate = useNavigate();
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
 
@@ -43,7 +45,7 @@ const PetPage = (props: Props) => {
 
   const fetchUser = async () => {
     if (cookieExists) {
-      const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+      const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
         withCredentials: true,
       });
       userStore.setToken(data);
@@ -82,7 +84,7 @@ const PetPage = (props: Props) => {
       if (!userStore.token.fosteredPets?.includes(params.id)) {
         const res = await axios.post(
           `/pet/${params.id}/adopt`,
-          { adoptionStatus: 'Fostered' },
+          { adoptionStatus: "Fostered" },
           {
             withCredentials: true,
           }
@@ -100,7 +102,7 @@ const PetPage = (props: Props) => {
       if (!userStore.token.adoptedPets?.includes(params.id)) {
         const res = await axios.post(
           `/pet/${params.id}/adopt`,
-          { adoptionStatus: 'Adopted' },
+          { adoptionStatus: "Adopted" },
           {
             withCredentials: true,
           }
@@ -147,40 +149,40 @@ const PetPage = (props: Props) => {
               <h1>{pet?.name}</h1>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex gap-4">
-              <span>Type: {pet?.type ? pet?.type : 'N/A'}</span>
-              <span>Breed: {pet?.breed ? pet?.breed : 'N/A'}</span>
+              <span>Type: {pet?.type ? pet?.type : "N/A"}</span>
+              <span>Breed: {pet?.breed ? pet?.breed : "N/A"}</span>
             </ListGroup.Item>
             <ListGroup.Item>
-              Adoption Status:{' '}
-              {pet?.adoptionStatus ? pet?.adoptionStatus : 'N/A'}
+              Adoption Status:{" "}
+              {pet?.adoptionStatus ? pet?.adoptionStatus : "N/A"}
             </ListGroup.Item>
             <ListGroup.Item className="d-flex gap-4">
-              <span>Height: {pet?.height ? pet?.height : 'N/A'}cm</span>
-              <span>Weight: {pet?.weight ? pet?.weight : 'N/A'}lbs</span>
+              <span>Height: {pet?.height ? pet?.height : "N/A"}cm</span>
+              <span>Weight: {pet?.weight ? pet?.weight : "N/A"}lbs</span>
             </ListGroup.Item>
             <ListGroup.Item>
-              Color: {pet?.color ? pet?.color : 'N/A'}
+              Color: {pet?.color ? pet?.color : "N/A"}
             </ListGroup.Item>
             <ListGroup.Item>
-              Bio:{'   '}
+              Bio:{"   "}
               {pet?.bio
                 ? pet?.bio
                 : `   Our lil munchkin ${pet?.name} is the sweetest! ${pet?.name} wants all the head scratches, bell rubs, and snuggles you have to offer! Adopt this absolute lovebug today!`}
             </ListGroup.Item>
             <ListGroup.Item>
-              Hypoallergenic: {pet?.hypoallergnic ? 'Yes' : 'No'}
+              Hypoallergenic: {pet?.hypoallergnic ? "Yes" : "No"}
             </ListGroup.Item>
             <ListGroup.Item>
-              Dietary Restrictions:{' '}
+              Dietary Restrictions:{" "}
               {!pet?.dietery
-                ? 'N/A'
+                ? "N/A"
                 : pet?.dietery.length > 0
-                ? pet?.dietery.join(', ')
-                : 'N/A'}
+                ? pet?.dietery.join(", ")
+                : "N/A"}
             </ListGroup.Item>
           </ListGroup>
           <div className="d-flex gap-1 p-2">
-            {pet?.adoptionStatus !== 'Adopted' && (
+            {pet?.adoptionStatus !== "Adopted" && (
               <Button
                 variant="primary"
                 size="lg"
@@ -190,7 +192,7 @@ const PetPage = (props: Props) => {
                 Adopt
               </Button>
             )}
-            {pet?.adoptionStatus === 'Available' && (
+            {pet?.adoptionStatus === "Available" && (
               <Button
                 variant="primary"
                 size="lg"
@@ -221,10 +223,23 @@ const PetPage = (props: Props) => {
             >
               <MdFavoriteBorder className="me-3" stroke="white" size={27} />
               {userStore.token.savedPets?.includes(params.id)
-                ? 'UNFAVORITE'
-                : 'FAVORITE'}
+                ? "UNFAVORITE"
+                : "FAVORITE"}
             </Button>
           </div>
+          {userStore.token.isAdmin === true && (
+            <div className="d-flex p-2">
+              <Button
+                variant="info"
+                size="lg"
+                className="flex-fill"
+                onClick={() => navigate(`/addpet/${params.id}`)}
+              >
+                <AiOutlineEdit className="me-3" stroke="white" size={27} />
+                Edit
+              </Button>
+            </div>
+          )}
         </Col>
       </Row>
     </>

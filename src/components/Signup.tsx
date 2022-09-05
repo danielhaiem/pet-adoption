@@ -1,10 +1,10 @@
 /* eslint-disable no-useless-escape */
-import { Modal, Form, Button, FloatingLabel } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import type { UserAuth } from '../types/types';
-import { modalSignUpInStore, userAuthStore } from '../store';
+import { Modal, Form, Button, FloatingLabel } from "react-bootstrap";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import type { UserAuth } from "../types/types";
+import { modalSignUpInStore, userAuthStore } from "../store";
 
 type Props = {
   handleClose: () => void;
@@ -17,31 +17,31 @@ const passwordRegExp =
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
-    .email('*Must be a valid email address')
-    .max(50, '*Email must be less than 50 characters')
-    .required('*Email is required'),
+    .email("*Must be a valid email address")
+    .max(50, "*Email must be less than 50 characters")
+    .required("*Email is required"),
   password: Yup.string()
-    .min(6, 'Password should be of minimum 6 characters length')
+    .min(6, "Password should be of minimum 6 characters length")
     .matches(
       passwordRegExp,
-      'Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character'
+      "Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
     )
-    .required('Password is required'),
+    .required("Password is required"),
   repassword: Yup.string()
-    .min(6, 'Password should be of minimum 6 characters length')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Password is required'),
+    .min(6, "Password should be of minimum 6 characters length")
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Password is required"),
   fname: Yup.string()
-    .min(2, '*Names must have at least 2 characters')
+    .min(2, "*Names must have at least 2 characters")
     .max(15, "*Names can't be longer than 15 characters")
-    .required('*Name is required'),
+    .required("*Name is required"),
   lname: Yup.string()
-    .min(2, '*Names must have at least 2 characters')
+    .min(2, "*Names must have at least 2 characters")
     .max(20, "*Names can't be longer than 20 characters")
-    .required('*Name is required'),
+    .required("*Name is required"),
   tel: Yup.string()
-    .matches(phoneRegExp, '*Phone number is not valid')
-    .required('*Phone number required'),
+    .matches(phoneRegExp, "*Phone number is not valid")
+    .required("*Phone number required"),
 });
 
 const Signup = (props: Props) => {
@@ -53,12 +53,12 @@ const Signup = (props: Props) => {
     <>
       <Formik
         initialValues={{
-          email: '',
-          password: '',
-          repassword: '',
-          fname: '',
-          lname: '',
-          tel: '',
+          email: "",
+          password: "",
+          repassword: "",
+          fname: "",
+          lname: "",
+          tel: "",
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
@@ -67,10 +67,10 @@ const Signup = (props: Props) => {
           // When button submits form and form is in the process of submitting, submit button is disabled
           setSubmitting(true);
 
-          const res = await axios.post('/signup', values);
+          const res = await axios.post("/signup", values);
           console.log(res.data);
           if (res.data) {
-            const { data }: { data: UserAuth } = await axios.get(`/user/:id`, {
+            const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
               withCredentials: true,
             });
             userStore.setToken(data);
