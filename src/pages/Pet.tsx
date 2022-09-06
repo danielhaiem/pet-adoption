@@ -5,7 +5,12 @@ import { BiArrowBack } from "react-icons/bi";
 import { MdFavoriteBorder } from "react-icons/md";
 import axios from "axios";
 import type { Pet, PetType, UserAuth } from "../types/types";
-import { modalSignUpInStore, userAuthStore, useStore } from "../store";
+import {
+  alertsStore,
+  modalSignUpInStore,
+  userAuthStore,
+  useStore,
+} from "../store";
 import { AiOutlineEdit } from "react-icons/ai";
 
 type Props = {};
@@ -30,6 +35,8 @@ const PetPage = (props: Props) => {
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
   const store = useStore();
+  const setErrorMessage = alertsStore((state) => state.setErrorMessage);
+  const setAlertShow = alertsStore((state) => state.setAlertShow);
 
   const setShow = modalSignUpInStore((state) => state.setShow);
   const handleShow = () => setShow(true);
@@ -66,76 +73,105 @@ const PetPage = (props: Props) => {
   }, [fetchUserBool]);
 
   const handleSavePet = async () => {
-    if (cookieExists) {
-      if (userStore.userInfo.savedPets?.includes(params.id)) {
-        const res = await axios.delete(`/pet/${params.id}/save`, {
-          withCredentials: true,
-        });
-        if (res.data) setFetchUserBool((prev) => !prev);
-      } else {
-        const res = await axios.post(`/pet/${params.id}/save`, {
-          withCredentials: true,
-        });
-        if (res.data) {
-          setFetchPetBool((prev) => !prev);
-          setFetchUserBool((prev) => !prev);
+    try {
+      if (cookieExists) {
+        if (userStore.userInfo.savedPets?.includes(params.id)) {
+          const res = await axios.delete(`/pet/${params.id}/save`, {
+            withCredentials: true,
+          });
+          if (res.data) setFetchUserBool((prev) => !prev);
+        } else {
+          const res = await axios.post(`/pet/${params.id}/save`, {
+            withCredentials: true,
+          });
+          if (res.data) {
+            setFetchPetBool((prev) => !prev);
+            setFetchUserBool((prev) => !prev);
+          }
         }
       }
+    } catch (error: any) {
+      setErrorMessage(error.response.data);
+      setAlertShow(true);
+      setFetchPetBool((prev) => !prev);
+      setFetchUserBool((prev) => !prev);
     }
   };
 
   const handleFosterPet = async () => {
-    if (cookieExists) {
-      if (!userStore.userInfo.fosteredPets?.includes(params.id)) {
-        const res = await axios.post(
-          `/pet/${params.id}/adopt`,
-          { adoptionStatus: "Fostered" },
-          {
-            withCredentials: true,
+    try {
+      if (cookieExists) {
+        // setFetchPetBool((prev) => !prev);
+        if (!userStore.userInfo.fosteredPets?.includes(params.id)) {
+          const res = await axios.post(
+            `/pet/${params.id}/adopt`,
+            { adoptionStatus: "Fostered" },
+            {
+              withCredentials: true,
+            }
+          );
+          if (res.data) {
+            setFetchPetBool((prev) => !prev);
+            setFetchUserBool((prev) => !prev);
           }
-        );
-        if (res.data) {
-          setFetchPetBool((prev) => !prev);
-          setFetchUserBool((prev) => !prev);
         }
       }
+    } catch (error: any) {
+      setErrorMessage(error.response.data);
+      setAlertShow(true);
+      setFetchPetBool((prev) => !prev);
+      setFetchUserBool((prev) => !prev);
     }
   };
 
   const handleAdoptPet = async () => {
-    if (cookieExists) {
-      if (!userStore.userInfo.adoptedPets?.includes(params.id)) {
-        const res = await axios.post(
-          `/pet/${params.id}/adopt`,
-          { adoptionStatus: "Adopted" },
-          {
-            withCredentials: true,
+    try {
+      if (cookieExists) {
+        if (!userStore.userInfo.adoptedPets?.includes(params.id)) {
+          const res = await axios.post(
+            `/pet/${params.id}/adopt`,
+            { adoptionStatus: "Adopted" },
+            {
+              withCredentials: true,
+            }
+          );
+          if (res.data) {
+            setFetchPetBool((prev) => !prev);
+            setFetchUserBool((prev) => !prev);
           }
-        );
-        if (res.data) {
-          setFetchPetBool((prev) => !prev);
-          setFetchUserBool((prev) => !prev);
         }
       }
+    } catch (error: any) {
+      setErrorMessage(error.response.data);
+      setAlertShow(true);
+      setFetchPetBool((prev) => !prev);
+      setFetchUserBool((prev) => !prev);
     }
   };
 
   const returnPet = async () => {
-    if (cookieExists) {
-      if (
-        userStore.userInfo.adoptedPets?.includes(params.id) ||
-        userStore.userInfo.fosteredPets?.includes(params.id)
-      ) {
-        const res = await axios.post(`/pet/${params.id}/return`, {
-          withCredentials: true,
-        });
-        if (res.data) {
-          setFetchPetBool((prev) => !prev);
-          setFetchUserBool((prev) => !prev);
+    try {
+      if (cookieExists) {
+        if (
+          userStore.userInfo.adoptedPets?.includes(params.id) ||
+          userStore.userInfo.fosteredPets?.includes(params.id)
+        ) {
+          const res = await axios.post(`/pet/${params.id}/return`, {
+            withCredentials: true,
+          });
+          if (res.data) {
+            setFetchPetBool((prev) => !prev);
+            setFetchUserBool((prev) => !prev);
+          }
+        } else {
+          console.log("return pet didn't work");
         }
-      } else {
-        console.log("return pet didn't work");
       }
+    } catch (error: any) {
+      setErrorMessage(error.response.data);
+      setAlertShow(true);
+      setFetchPetBool((prev) => !prev);
+      setFetchUserBool((prev) => !prev);
     }
   };
 

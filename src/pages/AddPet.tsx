@@ -7,12 +7,17 @@ import React, {
 } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import { alertsStore } from "../store";
 import { PetType } from "../types/types";
 
 type Props = {};
 
 const AddPet = (props: Props) => {
   const params = useParams();
+  const setAlertShow = alertsStore((state) => state.setAlertShow);
+  const setAlertBool = alertsStore((state) => state.setAlertBool);
+  const setErrorMessage = alertsStore((state) => state.setErrorMessage);
+  const setSuccessMessage = alertsStore((state) => state.setSuccessMessage);
 
   const fetchPet = async () => {
     const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
@@ -85,13 +90,21 @@ const AddPet = (props: Props) => {
         const res = await axios.post(`/pet`, petData, {
           withCredentials: true,
         });
+        setSuccessMessage("Pet successfully added!");
+        setAlertBool(true);
+        setAlertShow(true);
+        setPetInfo(initialPetInfo);
       } else {
         const res = await axios.put(`/pet/${params.id}`, petData, {
           withCredentials: true,
         });
+        setSuccessMessage("Pet successfully updated!");
+        setAlertBool(true);
+        setAlertShow(true);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setErrorMessage(error.response.data);
+      setAlertShow(true);
     }
   };
 

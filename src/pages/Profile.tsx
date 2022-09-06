@@ -3,7 +3,7 @@ import { Form, Button, FloatingLabel, Container } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import type { UserAuth } from "../types/types";
-import { userAuthStore } from "../store";
+import { alertsStore, userAuthStore } from "../store";
 import axios from "axios";
 
 type Props = {};
@@ -38,6 +38,10 @@ const validationSchema = Yup.object().shape({
 
 const Profile = (props: Props) => {
   const { userInfo, setUserInfo } = userAuthStore();
+  const setAlertShow = alertsStore((state) => state.setAlertShow);
+  const setAlertBool = alertsStore((state) => state.setAlertBool);
+  const setErrorMessage = alertsStore((state) => state.setErrorMessage);
+  const setSuccessMessage = alertsStore((state) => state.setSuccessMessage);
 
   return (
     <>
@@ -56,38 +60,46 @@ const Profile = (props: Props) => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          setSubmitting(true);
+          try {
+            setSubmitting(true);
 
-          let userObj = {};
-          if (values.email && values.email !== userInfo.email)
-            Object.assign(userObj, { email: values.email });
-          if (values.password && values.repassword) {
-            Object.assign(userObj, { password: values.password });
-            Object.assign(userObj, { repassword: values.repassword });
+            let userObj = {};
+            if (values.email && values.email !== userInfo.email)
+              Object.assign(userObj, { email: values.email });
+            if (values.password && values.repassword) {
+              Object.assign(userObj, { password: values.password });
+              Object.assign(userObj, { repassword: values.repassword });
+            }
+            if (values.fname && values.fname !== userInfo.fname)
+              Object.assign(userObj, {
+                fname: values.fname,
+              });
+            if (values.lname && values.lname !== userInfo.lname)
+              Object.assign(userObj, {
+                lname: values.lname,
+              });
+            if (values.tel && values.tel !== userInfo.tel)
+              Object.assign(userObj, { tel: values.tel });
+            if (values.bio && values.bio !== userInfo.bio)
+              Object.assign(userObj, { bio: values.bio });
+
+            const res = await axios.put("/user/id", userObj);
+            if (res.data) {
+              const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
+                withCredentials: true,
+              });
+              setUserInfo(data);
+              setSuccessMessage("Update successful!");
+              setAlertBool(true);
+              setAlertShow(true);
+            }
+
+            resetForm();
+            setSubmitting(false);
+          } catch (error: any) {
+            setErrorMessage(error.response.data);
+            setAlertShow(true);
           }
-          if (values.fname && values.fname !== userInfo.fname)
-            Object.assign(userObj, {
-              fname: values.fname,
-            });
-          if (values.lname && values.lname !== userInfo.lname)
-            Object.assign(userObj, {
-              lname: values.lname,
-            });
-          if (values.tel && values.tel !== userInfo.tel)
-            Object.assign(userObj, { tel: values.tel });
-          if (values.bio && values.bio !== userInfo.bio)
-            Object.assign(userObj, { bio: values.bio });
-
-          const res = await axios.put("/user/id", userObj);
-          if (res.data) {
-            const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
-              withCredentials: true,
-            });
-            setUserInfo(data);
-          }
-
-          resetForm();
-          setSubmitting(false);
         }}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
