@@ -120,7 +120,7 @@ const adoptOrFosterPet = async (req: Request, res: Response): Promise<void> => {
           { $push: { adoptedPets: id } }
         ).exec();
         const usersFosterPet = await User.findOneAndUpdate(
-          {},
+          { fosteredPets: { $in: [id] } },
           { $pull: { fosteredPets: id } }
         ).exec();
         const updatePetAdoptionStatus = await Pets.findOneAndUpdate(

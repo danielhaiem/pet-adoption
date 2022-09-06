@@ -15,6 +15,7 @@ import {
   isPetAdopted,
   isPetAvailable,
   isQueryValid,
+  isUserOwner,
 } from "../middleware/petsMiddleware";
 import { isAdmin, verifyToken } from "../middleware/userMiddleware";
 
@@ -45,7 +46,7 @@ router.post("/:id/save", verifyToken, addSavedPet);
 router.delete("/:id/save", verifyToken, deleteSavedPet);
 
 router.post("/:id/adopt", verifyToken, isPetAdopted, adoptOrFosterPet);
-router.post("/:id/return", verifyToken, isPetAvailable, returnPet);
+router.post("/:id/return", verifyToken, isPetAvailable, isUserOwner, returnPet);
 
 router.get("/user/:id", verifyToken, getUserPets);
 

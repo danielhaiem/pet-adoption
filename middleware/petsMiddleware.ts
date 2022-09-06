@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Pets from "../models/petsModel";
+import { User } from "../models/userModel";
 
 const isQueryValid = (req: Request, res: Response, next: NextFunction) => {
   const searchObj = {};
@@ -47,6 +48,13 @@ const isPetAdopted = async (
     res.status(400).send("Pet already adopted");
     return;
   }
+  if (
+    pet.adoptionStatus === "Fostered" &&
+    req.body.adoptionStatus === "Fostered"
+  ) {
+    res.status(400).send("Pet already fostered");
+    return;
+  }
   next();
 };
 
@@ -63,4 +71,31 @@ const isPetAvailable = async (
   next();
 };
 
-export { isQueryValid, isPetAdopted, isPetAvailable };
+const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const isCurrentOwner = await User.findById(req.body.userId, {
+    fosteredPets: 1,
+    adoptedPets: 1,
+    _id: 0,
+  }).exec();
+  // console.log("isCurrentOwner", isCurrentOwner);
+  const fosterCheck = isCurrentOwner.fosteredPets.find(
+    (pet: string) => pet === id
+  );
+  const adoptedCheck = isCurrentOwner.adoptedPets.find(
+    (pet: string) => pet === id
+  );
+  // console.log("fosterCheck", fosterCheck);
+  // console.log("adoptedCheck", adoptedCheck);
+  if (!fosterCheck && !adoptedCheck) {
+    res
+      .status(400)
+      .send(
+        "Pet is not fostered/adopted by you. Pet adoption status has been updated."
+      );
+    return;
+  }
+  next();
+};
+
+export { isQueryValid, isPetAdopted, isPetAvailable, isUserOwner };
