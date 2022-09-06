@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import type { UserAuth } from "../types/types";
-import { modalSignUpInStore, userAuthStore } from "../store";
+import { alertsStore, modalSignUpInStore, userAuthStore } from "../store";
 
 type Props = {
   handleClose: () => void;
@@ -48,6 +48,11 @@ const Signup = (props: Props) => {
   const userStore = userAuthStore();
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const setShow = modalSignUpInStore((state) => state.setShow);
+  const setAlertShow = alertsStore((state) => state.setAlertShow);
+  const setAlertBool = alertsStore((state) => state.setAlertBool);
+  const setErrorMessage = alertsStore((state) => state.setErrorMessage);
+  const setSuccessMessage = alertsStore((state) => state.setSuccessMessage);
+
   return (
     <>
       <Formik
@@ -63,23 +68,30 @@ const Signup = (props: Props) => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          setSubmitting(true);
+          try {
+            setSubmitting(true);
 
-          const res = await axios.post("/signup", values);
-          console.log(res.data);
-          if (res.data) {
-            const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
-              withCredentials: true,
-            });
-            userStore.setToken(data);
-            if (data) {
-              setCookieExists(true);
+            const res = await axios.post("/signup", values);
+            if (res.data) {
+              const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
+                withCredentials: true,
+              });
+              userStore.setUserInfo(data);
+              setSuccessMessage("Sign Up successful! Logged In.");
+              setAlertBool(true);
+              setAlertShow(true);
+              if (data) {
+                setCookieExists(true);
+              }
             }
-          }
 
-          resetForm();
-          setSubmitting(false);
-          setShow(false);
+            resetForm();
+            setSubmitting(false);
+            setShow(false);
+          } catch (error: any) {
+            setErrorMessage(error.response.data);
+            setAlertShow(true);
+          }
         }}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (

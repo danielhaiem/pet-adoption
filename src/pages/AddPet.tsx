@@ -46,7 +46,7 @@ const AddPet = (props: Props) => {
     breed: "",
   };
   const [petInfo, setPetInfo] = useState(initialPetInfo);
-  const [petImage, setPetImage] = useState("");
+  const [petImage, setPetImage] = useState<File>();
 
   useEffect(() => {
     if (params.id !== ":id") fetchPet();
@@ -77,9 +77,9 @@ const AddPet = (props: Props) => {
       petData.append("color", petInfo.color);
       petData.append("bio", petInfo.bio);
       petData.append("hypoallergnic", petHypoallergnic.toString());
-      petData.append("dietery", dieteryArray as any);
+      petData.append("dietery", dieteryArray.toString());
       petData.append("breed", petInfo.breed);
-      petData.append("picture", petImage);
+      if (petImage) petData.append("picture", petImage);
 
       if (params.id === ":id") {
         const res = await axios.post(`/pet`, petData, {
@@ -95,8 +95,8 @@ const AddPet = (props: Props) => {
     }
   };
 
-  const handleImage = (e: any) => {
-    setPetImage(e.target.files[0]);
+  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e && e.target && e.target.files) setPetImage(e.target.files[0]);
   };
 
   return (

@@ -1,27 +1,27 @@
-import axios from 'axios';
-import { Dropdown } from 'react-bootstrap';
-import { FaUser } from 'react-icons/fa';
-import { LinkContainer } from 'react-router-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { userAuthStore } from '../store';
-import type { UserAuth } from '../types/types';
+import axios from "axios";
+import { Dropdown } from "react-bootstrap";
+import { FaUser } from "react-icons/fa";
+import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { userAuthStore } from "../store";
+import type { UserAuth } from "../types/types";
 
 type Props = {};
 
 const ProfileDropdown = (props: Props) => {
   let navigate = useNavigate();
   const userStore = userAuthStore();
-  const { token }: { token: UserAuth } = userStore;
+  const { userInfo }: { userInfo: UserAuth } = userStore;
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
 
   const handleSignOut = async () => {
-    userStore.setToken({});
+    userStore.setUserInfo({});
     setCookieExists(false);
-    const res = await axios.post('/signout', {
+    const res = await axios.post("/signout", {
       withCredentials: true,
     });
     if (res) {
-      navigate('/');
+      navigate("/");
     }
   };
 
@@ -34,7 +34,7 @@ const ProfileDropdown = (props: Props) => {
         >
           <FaUser size={20} />
           <div>
-            {token?.fname} {token?.lname}
+            {userInfo?.fname} {userInfo?.lname}
           </div>
         </Dropdown.Toggle>
 

@@ -1,4 +1,4 @@
-import { userAuthStore } from '../store';
+import { userAuthStore } from "../store";
 
 type Props = {};
 
@@ -9,10 +9,10 @@ const Home = (props: Props) => {
   return (
     <div>
       <h1>
-        Welcome{' '}
+        Welcome{" "}
         {cookieExists
-          ? `back ${userStore.token.fname} ${userStore.token.lname}`
-          : 'to Woof Meow Adoption'}
+          ? `back ${userStore.userInfo.fname} ${userStore.userInfo.lname}`
+          : "to Woof Meow Adoption"}
       </h1>
       <p>
         Woof Meow Adoption is an online, searchable database of animals who need

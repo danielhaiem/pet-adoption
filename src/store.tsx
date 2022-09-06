@@ -1,5 +1,5 @@
-import create from 'zustand';
-import type { UserAuth, Pet } from './types/types';
+import create from "zustand";
+import type { UserAuth, Pet } from "./types/types";
 
 type Store = {
   pets: Pet;
@@ -7,8 +7,8 @@ type Store = {
 };
 
 type TokenStore = {
-  token: UserAuth;
-  setToken: (token: UserAuth) => void;
+  userInfo: UserAuth;
+  setUserInfo: (userInfo: UserAuth) => void;
   cookieExists: boolean;
   setCookieExists: (input: boolean) => void;
 };
@@ -18,14 +18,25 @@ type ModalStore = {
   setShow: (input: boolean) => void;
 };
 
+type AlertStore = {
+  alertShow: boolean;
+  setAlertShow: (input: boolean) => void;
+  errorMessage: string;
+  setErrorMessage: (input: string) => void;
+  successMessage: string;
+  setSuccessMessage: (input: string) => void;
+  alertBool: boolean;
+  setAlertBool: (input: boolean) => void;
+};
+
 const useStore = create<Store>((set) => ({
   pets: [],
   setPets: (pets: Pet) => set((state) => ({ ...state, pets })),
 }));
 
 const userAuthStore = create<TokenStore>((set) => ({
-  token: {},
-  setToken: (token: UserAuth) => set((state) => ({ ...state, token })),
+  userInfo: {},
+  setUserInfo: (userInfo: UserAuth) => set((state) => ({ ...state, userInfo })),
   cookieExists: false,
   setCookieExists: (input: boolean) =>
     set((state) => ({ cookieExists: input })),
@@ -36,4 +47,16 @@ const modalSignUpInStore = create<ModalStore>((set) => ({
   setShow: (input: boolean) => set((state) => ({ show: input })),
 }));
 
-export { useStore, userAuthStore, modalSignUpInStore };
+const alertsStore = create<AlertStore>((set) => ({
+  alertShow: false,
+  setAlertShow: (input: boolean) => set((state) => ({ alertShow: input })),
+  errorMessage: "",
+  setErrorMessage: (input: string) => set((state) => ({ errorMessage: input })),
+  successMessage: "",
+  setSuccessMessage: (input: string) =>
+    set((state) => ({ successMessage: input })),
+  alertBool: false,
+  setAlertBool: (input: boolean) => set((state) => ({ alertBool: input })),
+}));
+
+export { useStore, userAuthStore, modalSignUpInStore, alertsStore };

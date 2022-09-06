@@ -1,5 +1,5 @@
-import { Navigate } from 'react-router-dom';
-import { userAuthStore } from '../store';
+import { Navigate } from "react-router-dom";
+import { userAuthStore } from "../store";
 
 const UserRoute = ({ children }: { children: JSX.Element }) => {
   const userStore = userAuthStore();
@@ -8,7 +8,7 @@ const UserRoute = ({ children }: { children: JSX.Element }) => {
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const userStore = userAuthStore();
-  return userStore.token.isAdmin === true ? (
+  return userStore.userInfo.isAdmin === true ? (
     children
   ) : (
     <Navigate to="/" replace />

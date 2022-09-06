@@ -37,20 +37,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const Profile = (props: Props) => {
-  const { token, setToken } = userAuthStore();
+  const { userInfo, setUserInfo } = userAuthStore();
 
   return (
     <>
       <Formik
         enableReinitialize
         initialValues={{
-          email: token.email || "",
+          email: userInfo.email || "",
           password: "",
           repassword: "",
-          fname: token.fname || "",
-          lname: token.lname || "",
-          tel: token.tel || "",
-          bio: token.bio || "",
+          fname: userInfo.fname || "",
+          lname: userInfo.lname || "",
+          tel: userInfo.tel || "",
+          bio: userInfo.bio || "",
         }}
         validationSchema={validationSchema}
         validateOnChange={false}
@@ -59,23 +59,23 @@ const Profile = (props: Props) => {
           setSubmitting(true);
 
           let userObj = {};
-          if (values.email && values.email !== token.email)
+          if (values.email && values.email !== userInfo.email)
             Object.assign(userObj, { email: values.email });
           if (values.password && values.repassword) {
             Object.assign(userObj, { password: values.password });
             Object.assign(userObj, { repassword: values.repassword });
           }
-          if (values.fname && values.fname !== token.fname)
+          if (values.fname && values.fname !== userInfo.fname)
             Object.assign(userObj, {
               fname: values.fname,
             });
-          if (values.lname && values.lname !== token.lname)
+          if (values.lname && values.lname !== userInfo.lname)
             Object.assign(userObj, {
               lname: values.lname,
             });
-          if (values.tel && values.tel !== token.tel)
+          if (values.tel && values.tel !== userInfo.tel)
             Object.assign(userObj, { tel: values.tel });
-          if (values.bio && values.bio !== token.bio)
+          if (values.bio && values.bio !== userInfo.bio)
             Object.assign(userObj, { bio: values.bio });
 
           const res = await axios.put("/user/id", userObj);
@@ -83,7 +83,7 @@ const Profile = (props: Props) => {
             const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
               withCredentials: true,
             });
-            setToken(data);
+            setUserInfo(data);
           }
 
           resetForm();

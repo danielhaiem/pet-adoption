@@ -12,13 +12,24 @@ import AddPet from "./pages/AddPet";
 import { AdminRoute, UserRoute } from "./components/PrivateRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import User from "./pages/User";
+import { alertsStore } from "./store";
+import Alert from "./components/Alert";
 
 const App = () => {
+  const errorMessage = alertsStore((state) => state.errorMessage);
+  const successMessage = alertsStore((state) => state.successMessage);
+  const alertBool = alertsStore((state) => state.alertBool);
+
   return (
     <>
       <div className="App">
         <BrowserRouter>
           <NavigationBar />
+          <Alert
+            bgColorVariant={alertBool ? "info" : "secondary"}
+            toastTitle={alertBool ? "Success" : "Error"}
+            toastBody={alertBool ? successMessage : errorMessage}
+          />
           <main className="pb-3">
             <Container>
               <Routes>

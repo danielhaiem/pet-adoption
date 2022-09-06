@@ -27,13 +27,13 @@ const NavigationBar = (props: Props) => {
       withCredentials: true,
     });
     if (data) {
-      userStore.setToken(data);
+      userStore.setUserInfo(data);
       setCookieExists(true);
     }
   };
   useEffect(() => {
     fetchUser();
-    if (Object.keys(userStore.token).length > 0) {
+    if (Object.keys(userStore.userInfo).length > 0) {
       setCookieExists(true);
     }
   }, []);
@@ -93,7 +93,7 @@ const NavigationBar = (props: Props) => {
                 </LinkContainer>
               )}
 
-              {userStore.token.isAdmin === true && (
+              {userStore.userInfo.isAdmin === true && (
                 <LinkContainer to="/addpet/:id">
                   <Nav.Link className="link-hover d-flex gap-4">
                     <AiOutlineForm className="align-self-center fs-4" />
@@ -101,7 +101,7 @@ const NavigationBar = (props: Props) => {
                   </Nav.Link>
                 </LinkContainer>
               )}
-              {userStore.token.isAdmin === true && (
+              {userStore.userInfo.isAdmin === true && (
                 <LinkContainer to="/admindashboard">
                   <Nav.Link className="link-hover d-flex gap-4">
                     <AiOutlineKey className="align-self-center fs-4" />

@@ -4,8 +4,8 @@ import { Row, Col, Image, ListGroup, Button } from "react-bootstrap";
 import { BiArrowBack } from "react-icons/bi";
 import { MdFavoriteBorder } from "react-icons/md";
 import axios from "axios";
-import type { PetType, UserAuth } from "../types/types";
-import { modalSignUpInStore, userAuthStore } from "../store";
+import type { Pet, PetType, UserAuth } from "../types/types";
+import { modalSignUpInStore, userAuthStore, useStore } from "../store";
 import { AiOutlineEdit } from "react-icons/ai";
 
 type Props = {};
@@ -29,6 +29,7 @@ const PetPage = (props: Props) => {
   const navigate = useNavigate();
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
+  const store = useStore();
 
   const setShow = modalSignUpInStore((state) => state.setShow);
   const handleShow = () => setShow(true);
@@ -41,6 +42,10 @@ const PetPage = (props: Props) => {
   const fetchPet = async () => {
     const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
     setPet(data);
+    if (data) {
+      const { data }: { data: Pet } = await axios.get("/pet");
+      store.setPets(data);
+    }
   };
 
   const fetchUser = async () => {
@@ -48,7 +53,7 @@ const PetPage = (props: Props) => {
       const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
         withCredentials: true,
       });
-      userStore.setToken(data);
+      userStore.setUserInfo(data);
     }
   };
 
@@ -62,7 +67,7 @@ const PetPage = (props: Props) => {
 
   const handleSavePet = async () => {
     if (cookieExists) {
-      if (userStore.token.savedPets?.includes(params.id)) {
+      if (userStore.userInfo.savedPets?.includes(params.id)) {
         const res = await axios.delete(`/pet/${params.id}/save`, {
           withCredentials: true,
         });
@@ -81,7 +86,7 @@ const PetPage = (props: Props) => {
 
   const handleFosterPet = async () => {
     if (cookieExists) {
-      if (!userStore.token.fosteredPets?.includes(params.id)) {
+      if (!userStore.userInfo.fosteredPets?.includes(params.id)) {
         const res = await axios.post(
           `/pet/${params.id}/adopt`,
           { adoptionStatus: "Fostered" },
@@ -99,7 +104,7 @@ const PetPage = (props: Props) => {
 
   const handleAdoptPet = async () => {
     if (cookieExists) {
-      if (!userStore.token.adoptedPets?.includes(params.id)) {
+      if (!userStore.userInfo.adoptedPets?.includes(params.id)) {
         const res = await axios.post(
           `/pet/${params.id}/adopt`,
           { adoptionStatus: "Adopted" },
@@ -118,8 +123,8 @@ const PetPage = (props: Props) => {
   const returnPet = async () => {
     if (cookieExists) {
       if (
-        userStore.token.adoptedPets?.includes(params.id) ||
-        userStore.token.fosteredPets?.includes(params.id)
+        userStore.userInfo.adoptedPets?.includes(params.id) ||
+        userStore.userInfo.fosteredPets?.includes(params.id)
       ) {
         const res = await axios.post(`/pet/${params.id}/return`, {
           withCredentials: true,
@@ -202,8 +207,8 @@ const PetPage = (props: Props) => {
                 Foster
               </Button>
             )}
-            {(userStore.token.adoptedPets?.includes(params.id) ||
-              userStore.token.fosteredPets?.includes(params.id)) && (
+            {(userStore.userInfo.adoptedPets?.includes(params.id) ||
+              userStore.userInfo.fosteredPets?.includes(params.id)) && (
               <Button
                 variant="primary"
                 size="lg"
@@ -222,12 +227,12 @@ const PetPage = (props: Props) => {
               onClick={cookieExists ? handleSavePet : handleShow}
             >
               <MdFavoriteBorder className="me-3" stroke="white" size={27} />
-              {userStore.token.savedPets?.includes(params.id)
+              {userStore.userInfo.savedPets?.includes(params.id)
                 ? "UNFAVORITE"
                 : "FAVORITE"}
             </Button>
           </div>
-          {userStore.token.isAdmin === true && (
+          {userStore.userInfo.isAdmin === true && (
             <div className="d-flex p-2">
               <Button
                 variant="info"
