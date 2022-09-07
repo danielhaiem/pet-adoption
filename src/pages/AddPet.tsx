@@ -22,6 +22,8 @@ const AddPet = (props: Props) => {
   const fetchPet = async () => {
     const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
     if (data) {
+      const originalPicture = data?.picture;
+      setOriginalPetImage(originalPicture);
       const dataAltered = {
         type: data?.type,
         name: data?.name,
@@ -52,6 +54,7 @@ const AddPet = (props: Props) => {
   };
   const [petInfo, setPetInfo] = useState(initialPetInfo);
   const [petImage, setPetImage] = useState<File>();
+  const [originalPetImage, setOriginalPetImage] = useState("");
 
   useEffect(() => {
     if (params.id !== ":id") fetchPet();
@@ -84,7 +87,11 @@ const AddPet = (props: Props) => {
       petData.append("hypoallergnic", petHypoallergnic.toString());
       petData.append("dietery", dieteryArray.toString());
       petData.append("breed", petInfo.breed);
-      if (petImage) petData.append("picture", petImage);
+      if (petImage) {
+        petData.append("picture", petImage);
+      } else {
+        if (params.id !== ":id") petData.append("picture", originalPetImage);
+      }
 
       if (params.id === ":id") {
         const res = await axios.post(`/pet`, petData, {

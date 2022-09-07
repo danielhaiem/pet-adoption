@@ -37,6 +37,7 @@ const PetPage = (props: Props) => {
   const store = useStore();
   const setErrorMessage = alertsStore((state) => state.setErrorMessage);
   const setAlertShow = alertsStore((state) => state.setAlertShow);
+  const setAlertBool = alertsStore((state) => state.setAlertBool);
 
   const setShow = modalSignUpInStore((state) => state.setShow);
   const handleShow = () => setShow(true);
@@ -101,7 +102,6 @@ const PetPage = (props: Props) => {
   const handleFosterPet = async () => {
     try {
       if (cookieExists) {
-        // setFetchPetBool((prev) => !prev);
         if (!userStore.userInfo.fosteredPets?.includes(params.id)) {
           const res = await axios.post(
             `/pet/${params.id}/adopt`,

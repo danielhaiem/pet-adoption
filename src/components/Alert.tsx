@@ -1,4 +1,3 @@
-import React from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 import { GiJumpingDog, GiCat } from "react-icons/gi";
 import { alertsStore } from "../store";
@@ -20,7 +19,7 @@ const Alert = (props: Props) => {
         bg={props.bgColorVariant}
         onClose={() => {
           setAlertShow(false);
-          if (!alertShow) {
+          if (alertShow === false) {
             setAlertBool(false);
           }
         }}
