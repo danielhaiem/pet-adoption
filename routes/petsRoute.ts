@@ -12,9 +12,11 @@ import {
 } from "../controllers/petController";
 import { upload, uploadToCloudinary } from "../middleware/imagesMiddleware";
 import {
+  isFavorited,
   isPetAdopted,
   isPetAvailable,
   isQueryValid,
+  isUnFavorited,
   isUserOwner,
 } from "../middleware/petsMiddleware";
 import { isAdmin, verifyToken } from "../middleware/userMiddleware";
@@ -42,8 +44,8 @@ router.put(
   editPet
 );
 
-router.post("/:id/save", verifyToken, addSavedPet);
-router.delete("/:id/save", verifyToken, deleteSavedPet);
+router.post("/:id/save", verifyToken, isFavorited, addSavedPet);
+router.delete("/:id/save", verifyToken, isUnFavorited, deleteSavedPet);
 
 router.post("/:id/adopt", verifyToken, isPetAdopted, adoptOrFosterPet);
 router.post("/:id/return", verifyToken, isPetAvailable, isUserOwner, returnPet);

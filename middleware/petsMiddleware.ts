@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Pets from "../models/petsModel";
 import { User } from "../models/userModel";
+import { ISignup } from "../types/types";
 
 const isQueryValid = (req: Request, res: Response, next: NextFunction) => {
   const searchObj = {};
@@ -95,4 +96,49 @@ const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export { isQueryValid, isPetAdopted, isPetAvailable, isUserOwner };
+const isFavorited = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const { userId }: ISignup = req.body;
+  const isPetFavorited = await User.findById(userId, {
+    savedPets: 1,
+    _id: 0,
+  }).exec();
+  const favoriteCheck = isPetFavorited.savedPets.find(
+    (pet: string) => pet === id
+  );
+  if (favoriteCheck) {
+    res.status(400).send("Pet is already favorited.");
+    return;
+  }
+  next();
+};
+
+const isUnFavorited = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  const { userId }: ISignup = req.body;
+  const isPetFavorited = await User.findById(userId, {
+    savedPets: 1,
+    _id: 0,
+  }).exec();
+  const favoriteCheck = isPetFavorited.savedPets.find(
+    (pet: string) => pet === id
+  );
+  if (!favoriteCheck) {
+    res.status(400).send("Pet is already unfavorited.");
+    return;
+  }
+  next();
+};
+
+export {
+  isQueryValid,
+  isPetAdopted,
+  isPetAvailable,
+  isUserOwner,
+  isFavorited,
+  isUnFavorited,
+};
