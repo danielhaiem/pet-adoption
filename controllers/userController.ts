@@ -1,7 +1,6 @@
-import { Request, Response } from 'express';
-import Pets from '../models/petsModel';
-import { User } from '../models/userModel';
-import type { IUser } from '../types/types';
+import { Request, Response } from "express";
+import Pets from "../models/petsModel";
+import { User } from "../models/userModel";
 
 const getUsers = async (req: Request, res: Response) => {
   try {
@@ -29,36 +28,23 @@ const getUsers = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.body.userId);
+    const user = await User.findById(req.body.userId, {
+      _id: 1,
+      email: 1,
+      fname: 1,
+      lname: 1,
+      tel: 1,
+      isAdmin: 1,
+      bio: 1,
+      savedPets: 1,
+      fosteredPets: 1,
+      adoptedPets: 1,
+    });
     if (user) {
-      const {
-        _id,
-        email,
-        fname,
-        lname,
-        tel,
-        isAdmin,
-        bio,
-        savedPets,
-        fosteredPets,
-        adoptedPets,
-      }: IUser = user;
-      res.json({
-        id: _id,
-        email: email,
-        fname: fname,
-        lname: lname,
-        tel: tel,
-        isAdmin: isAdmin,
-        bio: bio || '',
-        savedPets: savedPets || [],
-        fosteredPets: fosteredPets || [],
-        adoptedPets: adoptedPets || [],
-        ok: true,
-      });
+      res.json(user);
     } else {
-      res.status(404).json({ message: 'User not found' });
-      throw new Error('User not found');
+      res.status(404).json({ message: "User not found" });
+      throw new Error("User not found");
     }
   } catch (error) {
     console.error(error);

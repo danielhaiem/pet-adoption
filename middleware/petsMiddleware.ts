@@ -78,15 +78,12 @@ const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
     adoptedPets: 1,
     _id: 0,
   }).exec();
-  // console.log("isCurrentOwner", isCurrentOwner);
   const fosterCheck = isCurrentOwner.fosteredPets.find(
     (pet: string) => pet === id
   );
   const adoptedCheck = isCurrentOwner.adoptedPets.find(
     (pet: string) => pet === id
   );
-  // console.log("fosterCheck", fosterCheck);
-  // console.log("adoptedCheck", adoptedCheck);
   if (!fosterCheck && !adoptedCheck) {
     res
       .status(400)

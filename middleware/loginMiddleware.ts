@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
-import bcrypt from 'bcrypt';
-import { User } from '../models/userModel';
+import { NextFunction, Request, Response } from "express";
+import bcrypt from "bcrypt";
+import { User } from "../models/userModel";
 
 const isExistingUser = async (
   req: Request,
@@ -14,7 +14,7 @@ const isExistingUser = async (
     next();
     return;
   }
-  res.status(400).send('User with this email does not exist');
+  res.status(400).send("User with this email does not exist");
 };
 
 const verifyPwd = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +29,7 @@ const verifyPwd = async (req: Request, res: Response, next: NextFunction) => {
       next();
       return;
     } else {
-      res.status(400).send('Incorrrect Password!');
+      res.status(400).send("Incorrrect Password!");
     }
   });
 };
