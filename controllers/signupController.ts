@@ -1,9 +1,9 @@
-import dotenv from 'dotenv';
-import { User } from '../models/userModel';
-import { NextFunction, Request, Response } from 'express';
-import connectDB from '../config/db';
-import jwt from 'jsonwebtoken';
-import type { ISignup } from '../types/types';
+import dotenv from "dotenv";
+import { User } from "../models/userModel";
+import { NextFunction, Request, Response } from "express";
+import connectDB from "../config/db";
+import jwt from "jsonwebtoken";
+import type { ISignup } from "../types/types";
 
 dotenv.config();
 connectDB();
@@ -17,12 +17,16 @@ const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
       { id: userId._id, isAdmin: userId.isAdmin },
       process.env.TOKEN_SECRET as string,
       {
-        expiresIn: '1d',
+        expiresIn: "1d",
       }
     );
-    res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie("token", token, {
+      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
     res.send({
-      ok: userId.true,
+      ok: true,
     });
   } catch (error: any) {
     console.log(error);
