@@ -1,0 +1,52 @@
+{
+  "name": "fs-pet-adoption-be-danielhaiem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "node server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.ts",
+    "data:import": "ts-node seeder.ts",
+    "data:destroy": "ts-node seeder.ts -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israeltechchallenge/fs-pet-adoption-be-danielhaiem.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/israeltechchallenge/fs-pet-adoption-be-danielhaiem/issues"
+  },
+  "homepage": "https://github.com/israeltechchallenge/fs-pet-adoption-be-danielhaiem#readme",
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/multer": "^1.4.7",
+    "ajv": "^8.11.0",
+    "bcrypt": "^5.0.1",
+    "cloudinary": "^1.31.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.8.1",
+    "mongoose": "^6.5.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.7.2",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
+}
