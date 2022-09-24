@@ -1,0 +1,20 @@
+{
+  "name": "pet-adoption",
+  "version": "1.0.0",
+  "description": "A full-stack app for adopting pets. Includes search, user/pet management and admin functionalities.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielhaiem/pet-adoption.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielhaiem/pet-adoption/issues"
+  },
+  "homepage": "https://github.com/danielhaiem/pet-adoption#readme"
+}
