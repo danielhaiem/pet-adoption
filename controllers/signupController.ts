@@ -17,11 +17,11 @@ const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
       { id: userId._id, isAdmin: userId.isAdmin },
       process.env.TOKEN_SECRET as string,
       {
-        expiresIn: "1d",
+        expiresIn: "7d",
       }
     );
     res.cookie("token", token, {
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 168 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
