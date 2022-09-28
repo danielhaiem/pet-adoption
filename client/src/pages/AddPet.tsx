@@ -9,6 +9,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { alertsStore } from "../store";
 import { PetType } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -20,7 +21,9 @@ const AddPet = (props: Props) => {
   const setSuccessMessage = alertsStore((state) => state.setSuccessMessage);
 
   const fetchPet = async () => {
-    const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
+    const { data }: { data: PetType } = await axios.get(
+      `${BASE_URL}/pet/${params.id}`
+    );
     if (data) {
       const originalPicture = data?.picture;
       setOriginalPetImage(originalPicture);
@@ -94,7 +97,7 @@ const AddPet = (props: Props) => {
       }
 
       if (params.id === ":id") {
-        const res = await axios.post(`/pet`, petData, {
+        const res = await axios.post(`${BASE_URL}/pet`, petData, {
           withCredentials: true,
         });
         setSuccessMessage("Pet successfully added!");
@@ -102,7 +105,7 @@ const AddPet = (props: Props) => {
         setAlertShow(true);
         setPetInfo(initialPetInfo);
       } else {
-        const res = await axios.put(`/pet/${params.id}`, petData, {
+        const res = await axios.put(`${BASE_URL}/pet/${params.id}`, petData, {
           withCredentials: true,
         });
         setSuccessMessage("Pet successfully updated!");

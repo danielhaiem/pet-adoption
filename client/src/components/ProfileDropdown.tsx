@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { userAuthStore } from "../store";
 import type { UserAuth } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -17,9 +18,13 @@ const ProfileDropdown = (props: Props) => {
   const handleSignOut = async () => {
     userStore.setUserInfo({});
     setCookieExists(false);
-    const res = await axios.post("/signout", {
-      withCredentials: true,
-    });
+    const res = await axios.post(
+      `${BASE_URL}/signout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
     if (res) {
       navigate("/");
     }

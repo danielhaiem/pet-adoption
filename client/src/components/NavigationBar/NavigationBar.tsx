@@ -15,6 +15,7 @@ import FormModal from "../FormModal";
 import ProfileDropdown from "../ProfileDropdown";
 import "./NavigationBar.css";
 import type { UserAuth } from "../../types/types";
+import { BASE_URL } from "../../utils/globals";
 
 type Props = {};
 
@@ -23,9 +24,12 @@ const NavigationBar = (props: Props) => {
   const setCookieExists = userAuthStore((state) => state.setCookieExists);
   const cookieExists = userAuthStore((state) => state.cookieExists);
   const fetchUser = async () => {
-    const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
-      withCredentials: true,
-    });
+    const { data }: { data: UserAuth } = await axios.get(
+      `${BASE_URL}/user/id`,
+      {
+        withCredentials: true,
+      }
+    );
     if (data) {
       userStore.setUserInfo(data);
       setCookieExists(true);

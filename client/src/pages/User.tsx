@@ -1,10 +1,11 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Container, Tab, Tabs } from 'react-bootstrap';
-import { BiArrowBack } from 'react-icons/bi';
-import { Link, useParams } from 'react-router-dom';
-import PetList from '../components/PetList';
-import { Pet, UserType, UserType2 } from '../types/types';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Container, Tab, Tabs } from "react-bootstrap";
+import { BiArrowBack } from "react-icons/bi";
+import { Link, useParams } from "react-router-dom";
+import PetList from "../components/PetList";
+import { Pet, UserType, UserType2 } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -16,7 +17,7 @@ const User = (props: Props) => {
 
   const fetchUser = async () => {
     const { data }: { data: UserType } = await axios.get(
-      `/user/${params.id}/full`,
+      `${BASE_URL}/user/${params.id}/full`,
       { withCredentials: true }
     );
     if (data) {
@@ -49,17 +50,17 @@ const User = (props: Props) => {
             {userPetList.length > 0 ? (
               <PetList petsList={userPetList} />
             ) : (
-              'User currently does not own or foster any pets'
+              "User currently does not own or foster any pets"
             )}
           </Tab>
           <Tab eventKey="savedpets" title="Favorite Pets">
             {favoriteList.length > 0 ? (
               <PetList petsList={favoriteList} />
             ) : (
-              'user currently does not have any favorited pets'
+              "user currently does not have any favorited pets"
             )}
           </Tab>
-        </Tabs>{' '}
+        </Tabs>{" "}
       </Container>
     </>
   );

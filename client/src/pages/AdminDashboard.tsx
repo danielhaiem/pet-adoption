@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, Container, Tab, Table, Tabs } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import type { Pet, UsersType } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -33,12 +34,14 @@ const AdminDashboard = (props: Props) => {
   const [pets, setPets] = useState<Pet>([]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get("/user", { withCredentials: true });
+    const { data } = await axios.get(`${BASE_URL}/user`, {
+      withCredentials: true,
+    });
     if (data) setUsers(data);
   };
 
   const fetchPets = async () => {
-    const { data }: { data: Pet } = await axios.get("/pet");
+    const { data }: { data: Pet } = await axios.get(`${BASE_URL}/pet`);
     if (data) setPets(data);
   };
 

@@ -23,16 +23,13 @@ import { isAdmin, verifyToken } from "../middleware/userMiddleware";
 
 const router = Router();
 
-router.get("/", isQueryValid, getSearchResults);
+router.get("/user/:id", verifyToken, getUserPets);
 
-router.post(
-  "/",
-  verifyToken,
-  isAdmin,
-  upload.single("picture"),
-  uploadToCloudinary,
-  addPet
-);
+router.post("/:id/save", verifyToken, isFavorited, addSavedPet);
+router.delete("/:id/save", verifyToken, isUnFavorited, deleteSavedPet);
+
+router.post("/:id/adopt", verifyToken, isPetAdopted, adoptOrFosterPet);
+router.post("/:id/return", verifyToken, isPetAvailable, isUserOwner, returnPet);
 
 router.get("/:id", getPetById);
 router.put(
@@ -44,12 +41,15 @@ router.put(
   editPet
 );
 
-router.post("/:id/save", verifyToken, isFavorited, addSavedPet);
-router.delete("/:id/save", verifyToken, isUnFavorited, deleteSavedPet);
+router.get("/", isQueryValid, getSearchResults);
 
-router.post("/:id/adopt", verifyToken, isPetAdopted, adoptOrFosterPet);
-router.post("/:id/return", verifyToken, isPetAvailable, isUserOwner, returnPet);
-
-router.get("/user/:id", verifyToken, getUserPets);
+router.post(
+  "/",
+  verifyToken,
+  isAdmin,
+  upload.single("picture"),
+  uploadToCloudinary,
+  addPet
+);
 
 export default router;

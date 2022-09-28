@@ -12,6 +12,7 @@ import {
   useStore,
 } from "../store";
 import { AiOutlineEdit } from "react-icons/ai";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -48,19 +49,24 @@ const PetPage = (props: Props) => {
   const [fetchPetBool, setFetchPetBool] = useState(false);
 
   const fetchPet = async () => {
-    const { data }: { data: PetType } = await axios.get(`/pet/${params.id}`);
+    const { data }: { data: PetType } = await axios.get(
+      `${BASE_URL}/pet/${params.id}`
+    );
     setPet(data);
     if (data) {
-      const { data }: { data: Pet } = await axios.get("/pet");
+      const { data }: { data: Pet } = await axios.get(`${BASE_URL}/pet`);
       store.setPets(data);
     }
   };
 
   const fetchUser = async () => {
     if (cookieExists) {
-      const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
-        withCredentials: true,
-      });
+      const { data }: { data: UserAuth } = await axios.get(
+        `${BASE_URL}/user/id`,
+        {
+          withCredentials: true,
+        }
+      );
       userStore.setUserInfo(data);
     }
   };
@@ -77,15 +83,20 @@ const PetPage = (props: Props) => {
     try {
       if (cookieExists) {
         if (userStore.userInfo.savedPets?.includes(params.id)) {
-          const res = await axios.delete(`/pet/${params.id}/save`, {
-            withCredentials: true,
-          });
-          if (res.data) setFetchUserBool((prev) => !prev);
+          const { data } = await axios.delete(
+            `${BASE_URL}/pet/${params.id}/save`,
+            {
+              withCredentials: true,
+            }
+          );
+          if (data) setFetchUserBool((prev) => !prev);
         } else {
-          const res = await axios.post(`/pet/${params.id}/save`, {
-            withCredentials: true,
-          });
-          if (res.data) {
+          const { data } = await axios.post(
+            `${BASE_URL}/pet/${params.id}/save`,
+            {},
+            { withCredentials: true }
+          );
+          if (data) {
             setFetchPetBool((prev) => !prev);
             setFetchUserBool((prev) => !prev);
           }
@@ -104,7 +115,7 @@ const PetPage = (props: Props) => {
       if (cookieExists) {
         if (!userStore.userInfo.fosteredPets?.includes(params.id)) {
           const res = await axios.post(
-            `/pet/${params.id}/adopt`,
+            `${BASE_URL}/pet/${params.id}/adopt`,
             { adoptionStatus: "Fostered" },
             {
               withCredentials: true,
@@ -129,7 +140,7 @@ const PetPage = (props: Props) => {
       if (cookieExists) {
         if (!userStore.userInfo.adoptedPets?.includes(params.id)) {
           const res = await axios.post(
-            `/pet/${params.id}/adopt`,
+            `${BASE_URL}/pet/${params.id}/adopt`,
             { adoptionStatus: "Adopted" },
             {
               withCredentials: true,
@@ -156,9 +167,13 @@ const PetPage = (props: Props) => {
           userStore.userInfo.adoptedPets?.includes(params.id) ||
           userStore.userInfo.fosteredPets?.includes(params.id)
         ) {
-          const res = await axios.post(`/pet/${params.id}/return`, {
-            withCredentials: true,
-          });
+          const res = await axios.post(
+            `${BASE_URL}/pet/${params.id}/return`,
+            {},
+            {
+              withCredentials: true,
+            }
+          );
           if (res.data) {
             setFetchPetBool((prev) => !prev);
             setFetchUserBool((prev) => !prev);
