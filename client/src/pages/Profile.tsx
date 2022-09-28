@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import type { UserAuth } from "../types/types";
 import { alertsStore, userAuthStore } from "../store";
 import axios from "axios";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -83,11 +84,16 @@ const Profile = (props: Props) => {
             if (values.bio && values.bio !== userInfo.bio)
               Object.assign(userObj, { bio: values.bio });
 
-            const res = await axios.put("/user/id", userObj);
+            const res = await axios.put(`${BASE_URL}/user/id`, userObj, {
+              withCredentials: true,
+            });
             if (res.data) {
-              const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
-                withCredentials: true,
-              });
+              const { data }: { data: UserAuth } = await axios.get(
+                `${BASE_URL}/user/id`,
+                {
+                  withCredentials: true,
+                }
+              );
               setUserInfo(data);
               setSuccessMessage("Update successful!");
               setAlertBool(true);

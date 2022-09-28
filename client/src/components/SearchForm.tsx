@@ -6,6 +6,7 @@ import axios from "axios";
 import { useStore } from "../store";
 import { useSearchParams } from "react-router-dom";
 import type { Pet } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -55,12 +56,17 @@ const SearchForm = (props: Props) => {
               values.weight ||
               values.name
             ) {
-              const { data }: { data: Pet } = await axios.get("/pet", {
-                params: searchObj,
-              });
+              const { data }: { data: Pet } = await axios.get(
+                `${BASE_URL}/pet`,
+                {
+                  params: searchObj,
+                }
+              );
               store.setPets(data);
             } else {
-              const { data }: { data: Pet } = await axios.get("/pet");
+              const { data }: { data: Pet } = await axios.get(
+                `${BASE_URL}/pet`
+              );
               store.setPets(data);
             }
           };

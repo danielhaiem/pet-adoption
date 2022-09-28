@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { alertsStore, modalSignUpInStore, userAuthStore } from "../store";
 import type { UserAuth } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {
   handleClose: () => void;
@@ -43,16 +44,19 @@ const Login = (props: Props) => {
             setSubmitting(true);
 
             const { data }: { data: UserAuth } = await axios.post(
-              "/login",
+              `${BASE_URL}/login`,
               values,
               {
                 withCredentials: true,
               }
             );
             if (data) {
-              const { data }: { data: UserAuth } = await axios.get(`/user/id`, {
-                withCredentials: true,
-              });
+              const { data }: { data: UserAuth } = await axios.get(
+                `${BASE_URL}/user/id`,
+                {
+                  withCredentials: true,
+                }
+              );
               userStore.setUserInfo(data);
               setSuccessMessage("Login successful!");
               setAlertBool(true);

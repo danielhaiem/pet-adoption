@@ -10,13 +10,18 @@ import userRoute from "./routes/userRoute";
 import { notFound, errorHandler } from "./middleware/errorMiddleware";
 import cookieParser from "cookie-parser";
 
-dotenv.config();
-connectDB();
 const app: Application = express();
-const PORT = process.env.PORT || 5000;
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://petadoption-app.netlify.app"],
+    credentials: true,
+  })
+);
+dotenv.config();
+connectDB();
+const PORT = process.env.PORT || 5000;
 app.use("/images", express.static("images"));
 
 app.get("/", (req: Request, res: Response): void => {

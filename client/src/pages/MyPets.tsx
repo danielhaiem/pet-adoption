@@ -4,6 +4,7 @@ import { Container, Tabs, Tab } from "react-bootstrap";
 import PetList from "../components/PetList";
 import { userAuthStore } from "../store";
 import { MyPets, Pet } from "../types/types";
+import { BASE_URL } from "../utils/globals";
 
 type Props = {};
 
@@ -15,9 +16,12 @@ const MyPetsPage = (props: Props) => {
 
   const fetchUserPets = async () => {
     if (cookieExists) {
-      const { data }: { data: MyPets } = await axios.get(`/pet/user/id`, {
-        withCredentials: true,
-      });
+      const { data }: { data: MyPets } = await axios.get(
+        `${BASE_URL}/pet/user/id`,
+        {
+          withCredentials: true,
+        }
+      );
       if (data) {
         setMyPetList([...data.adoptedPets, ...data.fosteredPets]);
         setFavoriteList([...data.savedPets]);

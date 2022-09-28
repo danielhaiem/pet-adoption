@@ -18,7 +18,7 @@ const login = (req: Request, res: Response) => {
     res.cookie("token", token, {
       maxAge: 168 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.send({
