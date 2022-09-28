@@ -4,6 +4,9 @@ A full-stack app for adopting pets. Includes search, user/pet management and adm
 
 Built as a graduation project for Israel Tech Challenge (itc) https://www.itc.tech/full-stack-development/
 
+You can find the deployed version here: https://petadoption-app.netlify.app/
+Please note, there is a response delay of up to 30 seconds for the first request that comes in after a period of inactivity due to free tier limitations of back-end hosting.
+
 # Tech Stack
 
 React, TypeScript (front-end & back-end), Bootstrap UI, Node.js (Express), MongoDB (Mongoose).
