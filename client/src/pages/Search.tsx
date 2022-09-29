@@ -17,7 +17,9 @@ const Search = (props: Props) => {
   };
 
   useEffect(() => {
-    fetchPets();
+    if (!pets) {
+      fetchPets();
+    }
   }, []);
   return (
     <>
