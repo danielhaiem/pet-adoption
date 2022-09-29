@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import PetList from "../components/PetList";
 import SearchForm from "../components/SearchForm";
 import { useStore } from "../store";
@@ -10,6 +11,9 @@ type Props = {};
 
 const Search = (props: Props) => {
   const { pets, setPets } = useStore();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const queryLength = searchParams.toString();
 
   const fetchPets = async () => {
     const { data }: { data: Pet } = await axios.get(`${BASE_URL}/pet`);
@@ -17,7 +21,7 @@ const Search = (props: Props) => {
   };
 
   useEffect(() => {
-    if (Object.keys(pets).length === 0) {
+    if (queryLength.length === 0) {
       fetchPets();
     }
   }, []);

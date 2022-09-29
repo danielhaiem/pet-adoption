@@ -4,13 +4,8 @@ import { Row, Col, Image, ListGroup, Button } from "react-bootstrap";
 import { BiArrowBack } from "react-icons/bi";
 import { MdFavoriteBorder } from "react-icons/md";
 import axios from "axios";
-import type { Pet, PetType, UserAuth } from "../types/types";
-import {
-  alertsStore,
-  modalSignUpInStore,
-  userAuthStore,
-  useStore,
-} from "../store";
+import type { PetType, UserAuth } from "../types/types";
+import { alertsStore, modalSignUpInStore, userAuthStore } from "../store";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BASE_URL } from "../utils/globals";
 
@@ -35,10 +30,8 @@ const PetPage = (props: Props) => {
   const navigate = useNavigate();
   const userStore = userAuthStore();
   const cookieExists = userAuthStore((state) => state.cookieExists);
-  const store = useStore();
   const setErrorMessage = alertsStore((state) => state.setErrorMessage);
   const setAlertShow = alertsStore((state) => state.setAlertShow);
-  const setAlertBool = alertsStore((state) => state.setAlertBool);
 
   const setShow = modalSignUpInStore((state) => state.setShow);
   const handleShow = () => setShow(true);
@@ -53,10 +46,6 @@ const PetPage = (props: Props) => {
       `${BASE_URL}/pet/${params.id}`
     );
     setPet(data);
-    if (data) {
-      const { data }: { data: Pet } = await axios.get(`${BASE_URL}/pet`);
-      store.setPets(data);
-    }
   };
 
   const fetchUser = async () => {
