@@ -24,6 +24,7 @@ const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
       maxAge: 168 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production" ? true : false,
     });
     res.send({
       ok: true,
