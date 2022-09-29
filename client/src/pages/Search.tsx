@@ -17,7 +17,7 @@ const Search = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!pets) {
+    if (Object.keys(pets).length === 0) {
       fetchPets();
     }
   }, []);
