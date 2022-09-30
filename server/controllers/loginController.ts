@@ -17,7 +17,6 @@ const login = (req: Request, res: Response) => {
     );
     res.cookie("token", token, {
       maxAge: 168 * 60 * 60 * 1000,
-      domain: "https://petadoption-app-peqh.onrender.com",
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production" ? true : false,
