@@ -19,7 +19,7 @@ app.use(
       "http://localhost:3000",
       "https://petadoption-app-peqh.onrender.com",
       "https://petadoption-app.netlify.app",
-      "https://danielhaiem.com/",
+      "https://app.danielhaiem.com/",
     ],
     credentials: true,
   })
