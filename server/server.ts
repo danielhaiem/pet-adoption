@@ -15,7 +15,11 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://petadoption-app.netlify.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://petadoption-app-peqh.onrender.com",
+      "https://petadoption-app.netlify.app",
+    ],
     credentials: true,
   })
 );
